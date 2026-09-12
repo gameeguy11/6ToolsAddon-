@@ -1,0 +1,174 @@
+package gamerguy11.anarchyaddon.shulkerview;
+
+import gamerguy11.anarchyaddon.modules.utility.ShulkerView;
+import gamerguy11.anarchyaddon.mixin.shulkerview.DuckHandledScreen;
+import net.minecraft.client.gui.Click;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
+import net.minecraft.util.math.MathHelper;
+import org.joml.Math;
+import org.joml.Vector2d;
+
+import static meteordevelopment.meteorclient.MeteorClient.mc;
+
+public class RenderHandler {
+    private static final int MARGIN = 2;
+    private static final int GRID_WIDTH = 20;
+    private static final int GRID_HEIGHT = 18;
+
+    private final ShulkerView config;
+
+    private final Vector2d clicked = new Vector2d();
+    private int height, offset;
+    private int rows, cols;
+
+    private int startX;
+    private int currentY;
+    private float scale;
+
+    public RenderHandler(ShulkerView config) {
+        this.config = config;
+    }
+
+    public void render(DrawContext context, double mouseX, double mouseY) {
+        scale = config.getScale();
+
+        boolean right = config.isAnchorRight();
+        boolean overflowed = false;
+        startX = right ? MARGIN : MARGIN + config.getOffsetX();
+        currentY = config.isBothSides() ? MARGIN + config.getOffsetY() : MARGIN + config.getOffsetY() + offset;
+
+        context.createNewRootLayer();
+        context.getMatrices().pushMatrix();
+        context.getMatrices().scale(scale, scale);
+        for (ShulkerInfo shulkerInfo : config.getUpdateHandler().getShulkerList()) {
+            updateShulkerInfo(shulkerInfo);
+
+            if (currentY >= context.getScaledWindowHeight() / scale && config.isBothSides() && !overflowed) {
+                overflowed = true;
+                right = !right;
+                currentY = MARGIN + config.getOffsetY();
+            }
+
+            if (right) {
+                float scaledGridWidth = GRID_WIDTH * scale;
+                startX = (int) ((context.getScaledWindowWidth() - cols * scaledGridWidth - MARGIN) / scale) - config.getOffsetX();
+            } else {
+                startX = MARGIN + config.getOffsetX();
+            }
+            drawShulkerInfo(context, shulkerInfo, mouseX, mouseY);
+        }
+        context.getMatrices().popMatrix();
+
+        height = currentY - offset;
+        clicked.set(0);
+    }
+
+    private void drawShulkerInfo(DrawContext context, ShulkerInfo info, double mouseX, double mouseY) {
+        int cols = this.cols * GRID_HEIGHT;
+        int rows = this.rows * GRID_WIDTH;
+        int width = cols + MARGIN * this.cols;
+
+        int x = startX;
+        int y = currentY;
+        int count = 0;
+
+        if (currentY * scale < context.getScaledWindowHeight()) {
+            drawBackground(context, x, y, width, info.color());
+
+            for (ItemStack stack : info.stacks()) {
+                if (info.compact() && stack.isEmpty()) break;
+                int column = x + (count % 9) * GRID_WIDTH + MARGIN;
+                int row = y + count / 9 * GRID_HEIGHT + MARGIN;
+                drawStack(context, stack, column, row);
+                if (isHoveredItem(mouseX, mouseY, column, row)) drawTooltip(context, stack, mouseX, mouseY);
+                count++;
+            }
+
+            if (count == 0 && info.compact()) {
+                context.drawItem(info.shulker(), x + MARGIN, currentY + MARGIN);
+            }
+
+            if (clicked.lengthSquared() != 0 && isHovered(clicked.x, clicked.y, width, rows)) clickShulker(info);
+        }
+        currentY += rows + MARGIN;
+    }
+
+    public void mouseClick(Click click) {
+        if (click.button() != 0) return;
+        clicked.set(click.x(), click.y());
+    }
+
+    public void mouseScroll(double x, double y, double amount) {
+        if (amount == 0) return;
+        if (mc.currentScreen instanceof DuckHandledScreen screen) {
+            Slot slot = screen.shulkerView$getFocused();
+            if (slot != null && slot.getStack().isOf(Items.BUNDLE)) return;
+        }
+
+        float f = Math.min(-height + mc.getWindow().getScaledHeight() / scale, 0);
+        this.offset = (int) MathHelper.clamp(offset + Math.ceil(amount) * 10, f, 0);
+    }
+
+    private void drawStack(DrawContext ctx, ItemStack stack, int x, int y) {
+        ctx.drawItem(stack, x, y);
+        if (stack.getCount() > 999) {
+            String text = "%.1fk".formatted(stack.getCount() / 1000f);
+            ctx.drawStackOverlay(mc.textRenderer, stack, x, y, text);
+        } else {
+            ctx.drawStackOverlay(mc.textRenderer, stack, x, y);
+        }
+    }
+
+    private void drawTooltip(DrawContext ctx, ItemStack stack, double mouseX, double mouseY) {
+        if (!config.isTooltips() || stack.isEmpty()) return;
+        float f = 1f / scale;
+        ctx.getMatrices().pushMatrix();
+        ctx.getMatrices().scale(f, f);
+        ctx.drawItemTooltip(mc.textRenderer, stack, (int) mouseX, (int) mouseY);
+        ctx.getMatrices().popMatrix();
+    }
+
+    private void drawBackground(DrawContext context, int x, int y, int width, int color) {
+        int background = config.getBackground();
+        context.fill(x, y, x + width, y + rows * GRID_HEIGHT + 4, background);
+        context.fill(x, y - 1, x + width, y, color);
+    }
+
+    private void clickShulker(ShulkerInfo info) {
+        int id = mc.player.currentScreenHandler.syncId;
+        mc.interactionManager.clickSlot(id, info.slot(), 0, SlotActionType.PICKUP, mc.player);
+        clicked.set(0);
+    }
+
+    private void updateShulkerInfo(ShulkerInfo info) {
+        int size = info.stacks().size();
+
+        if (info.compact()) {
+            size = 0;
+            for (ItemStack s : info.stacks()) {
+                if (s.isEmpty()) break;
+                size++;
+            }
+            size = Math.max(1, size);
+        }
+
+        rows = (int) Math.ceil(size / 9f);
+        cols = MathHelper.clamp(size, 1, 9);
+    }
+
+    private boolean isHovered(double x, double y, float cols, float rows) {
+        x /= scale;
+        y /= scale;
+        return x >= startX && x <= startX + cols && y >= currentY && y <= currentY + rows;
+    }
+
+    private boolean isHoveredItem(double mouseX, double mouseY, int x, int y) {
+        mouseX /= scale;
+        mouseY /= scale;
+        return mouseX >= x && mouseX <= x + GRID_WIDTH && mouseY >= y && mouseY <= y + GRID_HEIGHT;
+    }
+}

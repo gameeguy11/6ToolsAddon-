@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "gamerguy11.anarchyaddon.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "shulkerview.DuckHandledScreen",
+    "shulkerview.MixinHandledScreen",
+    "shulkerview.MixinCreativeInventoryScreen",
+    "anarchymod.BlockedServersMixin"
+  ]
+}
