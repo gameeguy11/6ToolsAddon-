@@ -1,6 +1,5 @@
 package gamerguy11.anarchyaddon;
 
-import com.example.tibiachat.commands.ChatTabsDebugCommand;
 import com.mojang.logging.LogUtils;
 import gamerguy11.anarchyaddon.commands.DubCounterCommand;
 import gamerguy11.anarchyaddon.commands.InventoryCommand;
@@ -48,7 +47,6 @@ public class AnarchyAddon extends MeteorAddon {
 
         Commands.add(new InventoryCommand());
         Commands.add(new DubCounterCommand());
-        Commands.add(new ChatTabsDebugCommand());
 
         Hud.get().register(PlayerTrackerHud.INFO);
         Hud.get().register(DubCounterHud.INFO);

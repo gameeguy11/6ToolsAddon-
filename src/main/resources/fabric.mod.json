@@ -18,12 +18,10 @@
   },
   "environment": "client",
   "entrypoints": {
-    "meteor": ["gamerguy11.anarchyaddon.AnarchyAddon"],
-    "client": ["com.example.tibiachat.TibiaChatTabsClient"]
+    "meteor": ["gamerguy11.anarchyaddon.AnarchyAddon"]
   },
   "mixins": [
-    "anarchyaddon.mixins.json",
-    "tibia_chat_tabs.mixins.json"
+    "anarchyaddon.mixins.json"
   ],
   "custom": {
     "meteor-client:color": "0,182,182"
