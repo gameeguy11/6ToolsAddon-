@@ -14,7 +14,6 @@ import gamerguy11.anarchyaddon.modules.utility.AutoTpAccept;
 import gamerguy11.anarchyaddon.modules.utility.ShulkerView;
 import gamerguy11.anarchyaddon.modules.utility.UnblockServers;
 import gamerguy11.anarchyaddon.modules.utility.WhisperLogger;
-import gamerguy11.anarchyaddon.modules.world.Printer;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.commands.Commands;
 import meteordevelopment.meteorclient.systems.hud.Hud;
@@ -44,7 +43,6 @@ public class AnarchyAddon extends MeteorAddon {
         Modules.get().add(new AutoTpAccept());
         Modules.get().add(new ShulkerView());
         Modules.get().add(new WhisperLogger());
-        Modules.get().add(new Printer());
         Modules.get().add(new UnblockServers());
 
         Commands.add(new InventoryCommand());
