@@ -3,8 +3,8 @@
   "id": "anarchyaddon",
   "version": "${version}",
   "name": "AnarchyAddon",
-  "description": "A Meteor Client addon for the anarchy server 6b6t.\nPublic version",
-  "authors": ["GamerGuy11"],
+  "description": "A Meteor Client addon for the anarchy server 6b6t.",
+  "authors": ["Gamerguy11"],
   "icon": "assets/anarchyaddon/icon.png",
   "contributors": [
     "Volizray (Efly is based on their VolytraFly-Addon: https://github.com/Volizray/VolytraFly-Addon)",
@@ -12,16 +12,18 @@
     "Plumbiller (Whisper Logger is adapted from their PlumbillerPublic: https://github.com/Plumbiller/PlumbillerPublic)"
   ],
   "contact": {
-    "homepage": "https://github.com/GamerGuy11/AnarchyAddon/commits/main",
-    "sources": "https://github.com/GamerGuy11/AnarchyAddon",
-    "issues": "https://github.com/GamerGuy11/AnarchyAddon/issues"
+    "homepage": "https://github.com/gameeguy11/AnarchyAddon/commits/master",
+    "sources": "https://github.com/gameeguy11/AnarchyAddon",
+    "issues": "https://github.com/gameeguy11/AnarchyAddon/issues"
   },
   "environment": "client",
   "entrypoints": {
-    "meteor": ["gamerguy11.anarchyaddon.AnarchyAddon"]
+    "meteor": ["gamerguy11.anarchyaddon.AnarchyAddon"],
+    "client": ["com.example.tibiachat.TibiaChatTabsClient"]
   },
   "mixins": [
-    "anarchyaddon.mixins.json"
+    "anarchyaddon.mixins.json",
+    "tibia_chat_tabs.mixins.json"
   ],
   "custom": {
     "meteor-client:color": "0,182,182"

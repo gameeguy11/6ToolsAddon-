@@ -5,7 +5,7 @@ A [Meteor Client](https://github.com/MeteorDevelopment/meteor-client) addon for 
 own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff.
 
 - **Mod ID:** `anarchyaddon`
-- **Author:** GamerGuy11
+- **Author:** Gamerguy11
 - **Target:** Minecraft 1.21.11, Fabric Loader, Meteor Client
 
 ## Credits
@@ -24,8 +24,6 @@ own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff
   this addon's structure (package, category, config folder) and simplified to target only
   this project's supported Minecraft version, with the rest of the logic unchanged. Full
   credit for the original module and its Discord-style HTML log design goes to Plumbiller.
-- Ez, Inventory Sorter, the `.dub` command and HUD, Anti-Drop, Auto TP Accept, Unblock
-  Servers, Player Tracker HUD, and Stats HUD were written from scratch for this addon.
 
 ## License
 
@@ -40,7 +38,7 @@ long as the original copyright notice and the credits above are kept.
 | Meteor Client | current 1.21.11 snapshot, check [maven.meteordev.org/snapshots](https://maven.meteordev.org/snapshots/meteordevelopment/meteor-client/) |
 | JDK           | 21                           |
 
-## Modules ("AnarchyAddon" category)
+## Modules
 
 ### Efly
 Elytra-flight and movement module tuned for 6b6t. This is Volizray's VolytraFly,
@@ -191,7 +189,7 @@ defaults if that fails.
 schematics loaded in Litematica. Not registered or built into the addon yet; check back in
 a future release.
 
-## HUD elements ("AnarchyAddon" group)
+## HUD elements 
 
 ### Player Tracker
 Lists every player currently loaded (within render/simulation distance), color-coded as
@@ -256,36 +254,6 @@ dot):
 | `.dub rendered`              | Count double chests within an 8-chunk radius        |
 | `.dub rendered <radius>`     | Count double chests within a custom chunk radius    |
 
-## Project layout
-
-```
-src/main/java/gamerguy11/anarchyaddon/
-├── AnarchyAddon.java              main addon entrypoint, registers everything below
-├── anarchymod/
-│   └── Domains.java                anarchy server domain list used by Unblock Servers
-├── commands/
-│   ├── DubCounterCommand.java
-│   └── InventoryCommand.java
-├── hud/
-│   ├── DubCounterHud.java
-│   ├── PlayerTrackerHud.java
-│   └── StatsHud.java
-├── mixin/
-│   ├── anarchymod/                 hooks used only by Unblock Servers
-│   └── shulkerview/                 hooks used only by Shulker View
-├── modules/
-│   ├── Efly.java
-│   ├── Ez.java
-│   ├── InventorySorterModule.java
-│   └── utility/
-│       ├── AntiDrop.java
-│       ├── AutoTpAccept.java
-│       ├── ShulkerView.java
-│       ├── UnblockServers.java
-│       └── WhisperLogger.java
-└── shulkerview/                     Shulker View's rendering/update/data classes
-```
-
 ## Building
 
 ```
@@ -309,13 +277,3 @@ versions if any of them move.
 Note: `net.fabricmc.fabric-loom` is now reserved for unobfuscated Minecraft (26.1+).
 1.21.11 is still obfuscated, so `build.gradle.kts` uses the legacy short plugin id
 `fabric-loom` instead, don't "fix" this back to the long id.
-
-## Known caveats
-
-- Double-check the exact Minecraft/Yarn/Loader/Loom/Meteor snapshot strings in
-  `gradle/libs.versions.toml` before building, these move fast and couldn't all be
-  verified from the environment this addon was written in.
-- `Efly` keeps the type names its original source already used; the rest of the addon is
-  written against the current official meteor-client API. If your project's mappings
-  don't line up with one or the other, it should just be a handful of import fixes, not a
-  logic rewrite.
