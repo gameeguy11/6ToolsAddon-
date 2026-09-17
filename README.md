@@ -176,9 +176,7 @@ fetches an up-to-date list from 6b6t's own API on activation, falling back to th
 defaults if that fails.
 
 ### Printer
-**Under development, not included in this release.** A planned module for auto-building
-schematics loaded in Litematica. Not registered or built into the addon yet; check back in
-a future release.
+**Under development, not included in this release.**
 
 ## HUD elements 
 
