@@ -4,10 +4,6 @@ A [Meteor Client](https://github.com/MeteorDevelopment/meteor-client) addon for 
 **1.21.11**, built for the 6b6t anarchy server. Modules and HUD elements live under their
 own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff.
 
-- **Mod ID:** `anarchyaddon`
-- **Author:** Gamerguy11
-- **Target:** Minecraft 1.21.11, Fabric Loader, Meteor Client
-
 ## Credits
 
 - **Efly**, the elytra-flight logic, is [Volizray](https://github.com/Volizray)'s own
@@ -24,11 +20,6 @@ own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff
   this addon's structure (package, category, config folder) and simplified to target only
   this project's supported Minecraft version, with the rest of the logic unchanged. Full
   credit for the original module and its Discord-style HTML log design goes to Plumbiller.
-
-## License
-
-MIT, see [LICENSE](LICENSE). You're free to use, modify, and redistribute this addon as
-long as the original copyright notice and the credits above are kept.
 
 ## Requirements
 
@@ -268,12 +259,8 @@ Meteor Client build.
 `gradle/libs.versions.toml` is the single place to bump Minecraft/Yarn/Loader/Loom/Meteor
 versions if any of them move.
 
-| Component      | Version                                     |
-|-----------------|---------------------------------------------|
-| Minecraft       | 1.21.11 (obfuscated, needs Yarn mappings)    |
-| Yarn mappings   | 1.21.11+build.4 (check [fabricmc.net/develop](https://fabricmc.net/develop) for anything newer) |
-| Fabric Loom     | 1.14-SNAPSHOT (legacy `fabric-loom` plugin id, see note below) |
+## License
 
-Note: `net.fabricmc.fabric-loom` is now reserved for unobfuscated Minecraft (26.1+).
-1.21.11 is still obfuscated, so `build.gradle.kts` uses the legacy short plugin id
-`fabric-loom` instead, don't "fix" this back to the long id.
+MIT, see [LICENSE](LICENSE). You're free to use, modify, and redistribute this addon as
+long as the original copyright notice and the credits above are kept.
+
