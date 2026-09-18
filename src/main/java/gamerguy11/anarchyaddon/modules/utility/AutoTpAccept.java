@@ -44,7 +44,7 @@ public class AutoTpAccept extends Module {
     private final Setting<String> requestPattern = sgGeneral.add(new StringSetting.Builder()
             .name("request-pattern")
             .description("Regex used to detect teleport requests. Capture group 1 must be the player's name.")
-            .defaultValue("([A-Za-z0-9_.]{2,32}) wants to teleport to you.)")
+            .defaultValue("([A-Za-z0-9_.]{2,32}) wants to teleport to you\\.")
             .build()
     );
 
@@ -64,6 +64,8 @@ public class AutoTpAccept extends Module {
 
     private Pattern compiledPattern;
     private String compiledFrom;
+    private String lastHandledText;
+    private long lastHandledAt;
 
     public AutoTpAccept() {
         super(
@@ -111,6 +113,13 @@ public class AutoTpAccept extends Module {
         }
 
         String requester = matcher.group(1);
+
+        long now = System.currentTimeMillis();
+        if (text.equals(lastHandledText) && (now - lastHandledAt) < 2000) {
+            return;
+        }
+        lastHandledText = text;
+        lastHandledAt = now;
 
         if (!shouldAccept(requester)) {
             if (chatFeedback.get()) {
