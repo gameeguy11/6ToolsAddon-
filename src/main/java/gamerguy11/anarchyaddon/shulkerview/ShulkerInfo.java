@@ -50,7 +50,7 @@ public record ShulkerInfo(ItemStack shulker, boolean compact, int color, int slo
             map.merge(item.getItem(), item.getCount(), Integer::sum);
         }
 
-        items.clear();
+        for (int i = 0; i < items.size(); i++) items.set(i, ItemStack.EMPTY);
         int k = 0;
         for (Map.Entry<Item, Integer> entry : map.entrySet()) {
             items.set(k++, new ItemStack(entry.getKey(), entry.getValue()));

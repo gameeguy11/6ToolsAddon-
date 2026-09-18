@@ -1,8 +1,7 @@
 package gamerguy11.anarchyaddon.mixin.anarchymod;
 
 import com.mojang.patchy.BlockedServers;
-import gamerguy11.anarchyaddon.modules.utility.UnblockServers;
-import meteordevelopment.meteorclient.systems.modules.Modules;
+import gamerguy11.anarchyaddon.anarchymod.Domains;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -13,7 +12,7 @@ public class BlockedServersMixin {
 
     @Inject(method = "isBlockedServerHostName", at = @At("RETURN"), cancellable = true, remap = false)
     public void isBlockedServerHostName(String server, CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValueZ() && Modules.get().get(UnblockServers.class).isDomainAllowed(server)) {
+        if (cir.getReturnValueZ() && Domains.contains(server)) {
             cir.setReturnValue(false);
         }
     }

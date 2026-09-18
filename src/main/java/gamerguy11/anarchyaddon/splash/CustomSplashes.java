@@ -1,0 +1,28 @@
+package gamerguy11.anarchyaddon.splash;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+public final class CustomSplashes {
+
+    private static final List<String> SPLASHES;
+
+    static {
+        SPLASHES = new ArrayList<>();
+        SPLASHES.add("FUCK MOJANG");
+        SPLASHES.add("TAKE THAT MIRCOSLOP");
+    }
+
+    private static final Random RANDOM = new Random();
+
+    private CustomSplashes() {
+    }
+
+    public static String pick() {
+        if (SPLASHES.isEmpty()) {
+            return null;
+        }
+        return SPLASHES.get(RANDOM.nextInt(SPLASHES.size()));
+    }
+}

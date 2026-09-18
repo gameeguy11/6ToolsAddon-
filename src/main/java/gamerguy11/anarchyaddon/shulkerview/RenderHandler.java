@@ -68,8 +68,8 @@ public class RenderHandler {
     }
 
     private void drawShulkerInfo(DrawContext context, ShulkerInfo info, double mouseX, double mouseY) {
-        int cols = this.cols * GRID_HEIGHT;
-        int rows = this.rows * GRID_WIDTH;
+        int cols = this.cols * GRID_WIDTH;
+        int rows = this.rows * GRID_HEIGHT;
         int width = cols + MARGIN * this.cols;
 
         int x = startX;

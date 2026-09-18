@@ -1,6 +1,7 @@
 package gamerguy11.anarchyaddon.modules.utility;
 
 import gamerguy11.anarchyaddon.AnarchyAddon;
+import gamerguy11.anarchyaddon.commands.DubCounterCommand;
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.IntSetting;
@@ -62,6 +63,10 @@ public class DubCounter extends Module {
         lastDubs = dubs;
         lastNormalChests = length;
         lastMode = countMode.get();
+
+        DubCounterCommand.lastDubs = dubs;
+        DubCounterCommand.lastNormalChests = length;
+        DubCounterCommand.lastMode = DubCounterCommand.CountMode.valueOf(countMode.get().name());
 
         if (chatFeedback.get()) {
             info(

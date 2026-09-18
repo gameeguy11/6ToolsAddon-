@@ -12,8 +12,9 @@ import gamerguy11.anarchyaddon.modules.InventorySorterModule;
 import gamerguy11.anarchyaddon.modules.utility.AntiDrop;
 import gamerguy11.anarchyaddon.modules.utility.AutoTpAccept;
 import gamerguy11.anarchyaddon.modules.utility.ShulkerView;
-import gamerguy11.anarchyaddon.modules.utility.UnblockServers;
 import gamerguy11.anarchyaddon.modules.utility.WhisperLogger;
+import gamerguy11.anarchyaddon.anarchymod.Domains;
+import gamerguy11.anarchyaddon.anarchymod.JoinPayload;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.commands.Commands;
 import meteordevelopment.meteorclient.systems.hud.Hud;
@@ -36,6 +37,9 @@ public class AnarchyAddon extends MeteorAddon {
     public void onInitialize() {
         LOG.info("Initializing AnarchyAddon");
 
+        JoinPayload.register();
+        Domains.initialize();
+
         Modules.get().add(new Efly());
         Modules.get().add(new Ez());
         Modules.get().add(new InventorySorterModule());
@@ -43,7 +47,6 @@ public class AnarchyAddon extends MeteorAddon {
         Modules.get().add(new AutoTpAccept());
         Modules.get().add(new ShulkerView());
         Modules.get().add(new WhisperLogger());
-        Modules.get().add(new UnblockServers());
 
         Commands.add(new InventoryCommand());
         Commands.add(new DubCounterCommand());

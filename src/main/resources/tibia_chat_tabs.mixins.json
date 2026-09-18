@@ -1,7 +1,0 @@
-{
-  "required": true,
-  "package": "com.example.tibiachat.mixin",
-  "compatibilityLevel": "JAVA_21",
-  "client": ["ChatScreenTabBarMixin"],
-  "injectors": { "defaultRequire": 1 }
-}

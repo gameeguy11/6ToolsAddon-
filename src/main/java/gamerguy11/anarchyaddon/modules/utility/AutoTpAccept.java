@@ -77,7 +77,6 @@ public class AutoTpAccept extends Module {
     private void onMessage(ReceiveMessageEvent event) {
         String text = event.getMessage().getString();
 
-        // Debug anything that looks teleport-related before regex matching.
         if (debug.get() && text.toLowerCase(Locale.ROOT).contains("teleport")) {
             String debugText = text
                     .replace(" ", "_")
@@ -90,7 +89,6 @@ public class AutoTpAccept extends Module {
 
         String patternSource = requestPattern.get();
 
-        // Recompile if the user changes the regex.
         if (compiledPattern == null || !patternSource.equals(compiledFrom)) {
             try {
                 compiledPattern = Pattern.compile(
