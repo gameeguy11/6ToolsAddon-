@@ -80,7 +80,7 @@ public class AutoTpAccept extends Module {
         // Debug anything that looks teleport-related before regex matching.
         if (debug.get() && text.toLowerCase(Locale.ROOT).contains("teleport")) {
             String debugText = text
-                    .replace(" ", "Â·")
+                    .replace(" ", "_")
                     .replace("\n", "\\n")
                     .replace("\r", "\\r")
                     .replace("\t", "\\t");
