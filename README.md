@@ -4,22 +4,14 @@ A [Meteor Client](https://github.com/MeteorDevelopment/meteor-client) addon for 
 **1.21.11**, built for the 6b6t anarchy server. Modules and HUD elements live under their
 own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff.
 
-## Credits
+## Unblock Servers
+Prevents known anarchy servers from being flagged as blocked by Mojang's server
+blocklist, so you can actually connect to them.
 
-- **Efly**, the elytra-flight logic, is [Volizray](https://github.com/Volizray)'s own
-  **VolytraFly**: <https://github.com/Volizray/VolytraFly-Addon>. It's repackaged and
-  renamed only for this addon (package, class name, module id `efly`, and category
-  changed); the actual flight logic is untouched. Full credit for Efly's design and
-  implementation goes to Volizray.
-- **Shulker View** is ported from [cattyngmd/shulker-view](https://github.com/cattyngmd/shulker-view)
-  (MIT licensed). Adapted to run as a normal Meteor module (own settings, own category)
-  instead of a separate mod with its own config screen, and extended in this addon with
-  fully customizable background color and on-screen position.
-- **Whisper Logger** is adapted from [Plumbiller](https://github.com/Plumbiller)'s
-  [PlumbillerPublic](https://github.com/Plumbiller/PlumbillerPublic) addon. Repackaged into
-  this addon's structure (package, category, config folder) and simplified to target only
-  this project's supported Minecraft version, with the rest of the logic unchanged. Full
-  credit for the original module and its Discord-style HTML log design goes to Plumbiller.
+Just enable it, there's nothing to configure. It ships with a default list of known
+anarchy server domains (6b6t and its mirrors, 8b8t, 7b7t, and a few others) and also
+fetches an up-to-date list from 6b6t's own API on activation, falling back to the built-in
+defaults if that fails.
 
 ## Requirements
 
@@ -166,17 +158,8 @@ Shulker View is a plain module, not a HUD element, so it can't be dragged around
 Meteor's HUD editor, `offset-x`/`offset-y`/`anchor-right` are how you reposition it
 instead.
 
-### Unblock Servers
-Prevents known anarchy servers from being flagged as blocked by Mojang's server
-blocklist, so you can actually connect to them.
-
-Just enable it, there's nothing to configure. It ships with a default list of known
-anarchy server domains (6b6t and its mirrors, 8b8t, 7b7t, and a few others) and also
-fetches an up-to-date list from 6b6t's own API on activation, falling back to the built-in
-defaults if that fails.
-
 ### Printer
-**Under development, not included in this release.**
+**Under development**
 
 ## HUD elements 
 
@@ -256,6 +239,23 @@ Meteor Client build.
 
 `gradle/libs.versions.toml` is the single place to bump Minecraft/Yarn/Loader/Loom/Meteor
 versions if any of them move.
+
+## Credits
+
+- **Efly**, the elytra-flight logic, is [Volizray](https://github.com/Volizray)'s own
+  **VolytraFly**: <https://github.com/Volizray/VolytraFly-Addon>. It's repackaged and
+  renamed only for this addon (package, class name, module id `efly`, and category
+  changed); the actual flight logic is untouched. Full credit for Efly's design and
+  implementation goes to Volizray.
+- **Shulker View** is ported from [cattyngmd/shulker-view](https://github.com/cattyngmd/shulker-view)
+  (MIT licensed). Adapted to run as a normal Meteor module (own settings, own category)
+  instead of a separate mod with its own config screen, and extended in this addon with
+  fully customizable background color and on-screen position.
+- **Whisper Logger** is adapted from [Plumbiller](https://github.com/Plumbiller)'s
+  [PlumbillerPublic](https://github.com/Plumbiller/PlumbillerPublic) addon. Repackaged into
+  this addon's structure (package, category, config folder) and simplified to target only
+  this project's supported Minecraft version, with the rest of the logic unchanged. Full
+  credit for the original module and its Discord-style HTML log design goes to Plumbiller.
 
 ## License
 
