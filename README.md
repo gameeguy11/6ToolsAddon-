@@ -166,10 +166,9 @@ Shulker View is a plain module, not a HUD element, so it can't be dragged around
 Meteor's HUD editor, `offset-x`/`offset-y`/`anchor-right` are how you reposition it
 instead.
 
-## Built in AnarchyMod
+### Unblock Servers
 Prevents known anarchy servers from being flagged as blocked by Mojang's server
 blocklist, so you can actually connect to them.
-### TAKE THAT MIROSLOP
 
 Just enable it, there's nothing to configure. It ships with a default list of known
 anarchy server domains (6b6t and its mirrors, 8b8t, 7b7t, and a few others) and also

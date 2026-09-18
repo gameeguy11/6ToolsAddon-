@@ -1,34 +1,34 @@
 {
-  "authors": [
-    "Gamerguy11"
+  "schemaVersion": 1,
+  "id": "anarchyaddon",
+  "version": "${version}",
+  "name": "AnarchyAddon",
+  "description": "A Meteor Client addon for the anarchy server 6b6t.",
+  "authors": ["Gamerguy11"],
+  "icon": "assets/anarchyaddon/icon.png",
+  "contributors": [
+    "Volizray (Efly is based on their VolytraFly-Addon: https://github.com/Volizray/VolytraFly-Addon)",
+    "cattyngmd (Shulker View is adapted from their shulker-view: https://github.com/cattyngmd/shulker-view)",
+    "Plumbiller (Whisper Logger is adapted from their PlumbillerPublic: https://github.com/Plumbiller/PlumbillerPublic)"
   ],
   "contact": {
     "homepage": "https://github.com/gameeguy11/AnarchyAddon/commits/master",
     "sources": "https://github.com/gameeguy11/AnarchyAddon",
     "issues": "https://github.com/gameeguy11/AnarchyAddon/issues"
   },
-  "contributors": [
-    "Volizray (Efly is based on their VolytraFly-Addon: https://github.com/Volizray/VolytraFly-Addon)",
-    "cattyngmd (Shulker View is adapted from their shulker-view: https://github.com/cattyngmd/shulker-view)",
-    "Plumbiller (Whisper Logger is adapted from their PlumbillerPublic: https://github.com/Plumbiller/PlumbillerPublic)"
-  ],
-  "description": "A Meteor Client addon for the anarchy server 6b6t.",
-  "entrypoints": {
-    "meteor": [
-      "gamerguy11.anarchyaddon.AnarchyAddon"
-    ],
-    "custom": {
-      "meteor-client:color": "0,182,182"
-    },
-    "depends": {
-      "java": ">=${jdk_version}",
-      "minecraft": "${minecraft_version}",
-      "meteor-client": "*"
-    }
-  },
   "environment": "client",
-  "icon": "assets/anarchyaddon/icon.png",
-  "id": "anarchyaddon",
-  "name": "AnarchyAddon",
-  "schemaVersion": 1,
-  "version": "${version}",
+  "entrypoints": {
+    "meteor": ["gamerguy11.anarchyaddon.AnarchyAddon"]
+  },
+  "mixins": [
+    "anarchyaddon.mixins.json"
+  ],
+  "custom": {
+    "meteor-client:color": "0,182,182"
+  },
+  "depends": {
+    "java": ">=${jdk_version}",
+    "minecraft": "${minecraft_version}",
+    "meteor-client": "*"
+  }
+}
