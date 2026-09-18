@@ -44,7 +44,7 @@ public class AutoTpAccept extends Module {
     private final Setting<String> requestPattern = sgGeneral.add(new StringSetting.Builder()
             .name("request-pattern")
             .description("Regex used to detect teleport requests. Capture group 1 must be the player's name.")
-            .defaultValue("^([A-Za-z0-9_.]{2,32}) wants to teleport to you.")
+            .defaultValue("([A-Za-z0-9_.]{2,32}) wants to teleport to you.)")
             .build()
     );
 
