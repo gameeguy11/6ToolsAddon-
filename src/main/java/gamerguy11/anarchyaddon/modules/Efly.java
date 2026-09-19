@@ -210,7 +210,7 @@ public class Efly extends Module {
     public final Setting<Boolean> landGently = sgLanding.add(new BoolSetting.Builder()
         .name("anti-slam")
         .description("Slows you down when landing to prevent fall damage")
-        .defaultValue(true)
+        .defaultValue(false)
         .build()
     );
 
@@ -255,7 +255,7 @@ public class Efly extends Module {
     public final Setting<Double> verticalSpeed = sgGeneral.add(new DoubleSetting.Builder()
         .name("maximum-vertical-speed")
         .description("The fastest vertical speed will go (blocks per tick)")
-        .defaultValue(29.999)
+        .defaultValue(5.999)
         .min(0)
         .build()
     );
@@ -272,7 +272,7 @@ public class Efly extends Module {
         .name("minimum-vertical-speed")
         .description("The speed you start at when moving vertically, before acceleration kicks in")
         .min(0)
-        .defaultValue(7.999)
+        .defaultValue(5.999)
         .build()
     );
 

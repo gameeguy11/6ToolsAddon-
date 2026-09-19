@@ -64,7 +64,7 @@ public class AutoTpAccept extends Module {
 
     private Pattern compiledPattern;
     private String compiledFrom;
-    private String lastHandledText;
+    private String lastHandledRequester;
     private long lastHandledAt;
 
     public AutoTpAccept() {
@@ -115,10 +115,10 @@ public class AutoTpAccept extends Module {
         String requester = matcher.group(1);
 
         long now = System.currentTimeMillis();
-        if (text.equals(lastHandledText) && (now - lastHandledAt) < 2000) {
+        if (requester.equalsIgnoreCase(lastHandledRequester) && (now - lastHandledAt) < 2000) {
             return;
         }
-        lastHandledText = text;
+        lastHandledRequester = requester;
         lastHandledAt = now;
 
         if (!shouldAccept(requester)) {
