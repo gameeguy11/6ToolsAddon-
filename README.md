@@ -4,6 +4,11 @@ A [Meteor Client](https://github.com/MeteorDevelopment/meteor-client) addon for 
 **1.21.11**, built for the 6b6t anarchy server. Modules and HUD elements live under their
 own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff.
 
+## Supporting the Creator
+#### I would appreciate it if 6b6t players paid me some Murphcoin in the Legion Discord server.
+#### .pay @gamerguy_11 any amount you feel is right
+#### Tysm for feeding my addiction
+
 ## Unblock Servers
 Prevents known anarchy servers from being flagged as blocked by Mojang's server
 blocklist, so you can actually connect to them.
