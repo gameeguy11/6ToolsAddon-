@@ -16,19 +16,23 @@
   "entrypoints": {
     "meteor": [
       "gamerguy11.anarchyaddon.AnarchyAddon"
-    ],
-    "custom": {
-      "meteor-client:color": "0,182,182"
-    },
-    "depends": {
-      "java": ">=${jdk_version}",
-      "minecraft": "${minecraft_version}",
-      "meteor-client": "*"
-    }
+    ]
+  },
+  "custom": {
+    "meteor-client:color": "0,182,182"
+  },
+  "depends": {
+    "java": ">=${jdk_version}",
+    "minecraft": "${minecraft_version}",
+    "meteor-client": "*"
   },
   "environment": "client",
   "icon": "assets/anarchyaddon/icon.png",
   "id": "anarchyaddon",
+  "mixins": [
+    "anarchyaddon.mixins.json"
+  ],
   "name": "AnarchyAddon",
   "schemaVersion": 1,
-  "version": "${version}",
+  "version": "${version}"
+}

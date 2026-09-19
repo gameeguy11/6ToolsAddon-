@@ -5,6 +5,7 @@ import gamerguy11.anarchyaddon.anarchymod.JoinPayload;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,12 +27,23 @@ public class JoinNotifierMixin {
             return;
         }
 
-        try {
-            ClientPlayNetworkHandler handler = (ClientPlayNetworkHandler) (Object) this;
-            handler.getConnection().send(JoinPayload.createPacket());
-        } catch (RuntimeException error) {
+        ClientPlayNetworkHandler handler = (ClientPlayNetworkHandler) (Object) this;
+        String address = server.address;
 
-            LOGGER.warning("Failed to send join notification to " + server.address + ": " + error.getMessage());
+        client.execute(() -> trySend(handler, address));
+    }
+
+    private void trySend(ClientPlayNetworkHandler handler, String address) {
+        try {
+            ClientConnection connection = handler.getConnection();
+
+            if (connection == null || !connection.isOpen()) {
+                return;
+            }
+
+            connection.send(JoinPayload.createPacket());
+        } catch (RuntimeException error) {
+            LOGGER.warning("Failed to send join notification to " + address + ": " + error.getMessage());
         }
     }
 }

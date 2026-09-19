@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "gamerguy11.anarchyaddon.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "splash.SplashTextResourceSupplierMixin",
+    "anarchymod.JoinNotifierMixin",
+    "anarchymod.BlockedServersMixin",
+    "shulkerview.DuckHandledScreen",
+    "shulkerview.MixinHandledScreen",
+    "shulkerview.MixinCreativeInventoryScreen",
+    "swing.LivingEntitySwingSpeedMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

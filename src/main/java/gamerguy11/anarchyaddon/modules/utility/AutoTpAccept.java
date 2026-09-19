@@ -1,19 +1,18 @@
 package gamerguy11.anarchyaddon.modules.utility;
 
 import gamerguy11.anarchyaddon.AnarchyAddon;
+import gamerguy11.anarchyaddon.systems.enemies.Enemies;
 import meteordevelopment.meteorclient.events.game.ReceiveMessageEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
-import meteordevelopment.meteorclient.settings.StringListSetting;
 import meteordevelopment.meteorclient.settings.StringSetting;
 import meteordevelopment.meteorclient.systems.friends.Friends;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import meteordevelopment.orbit.EventHandler;
 
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,17 +33,10 @@ public class AutoTpAccept extends Module {
             .build()
     );
 
-    private final Setting<List<String>> enemyNames = sgGeneral.add(new StringListSetting.Builder()
-            .name("enemy-names")
-            .description("Player names treated as enemies. Only used when mode is Enemies.")
-            .visible(() -> mode.get() == Mode.Enemies)
-            .build()
-    );
-
     private final Setting<String> requestPattern = sgGeneral.add(new StringSetting.Builder()
             .name("request-pattern")
             .description("Regex used to detect teleport requests. Capture group 1 must be the player's name.")
-            .defaultValue("^([A-Za-z0-9_.]{2,32}) wants to teleport to you\\.")
+            .defaultValue("([A-Za-z0-9_.]{2,32}) wants to teleport to you\\.")
             .build()
     );
 
@@ -62,8 +54,13 @@ public class AutoTpAccept extends Module {
             .build()
     );
 
+    private static final long ACTION_COOLDOWN_MS = 3000;
+
     private Pattern compiledPattern;
     private String compiledFrom;
+
+    private final Object actionLock = new Object();
+    private long lastActionAt = 0L;
 
     public AutoTpAccept() {
         super(
@@ -73,9 +70,20 @@ public class AutoTpAccept extends Module {
         );
     }
 
+    @Override
+    public void onActivate() {
+        synchronized (actionLock) {
+            lastActionAt = 0L;
+        }
+    }
+
     @EventHandler
     private void onMessage(ReceiveMessageEvent event) {
         String text = event.getMessage().getString();
+
+        if (text.contains("[Auto Tpy]")) {
+            return;
+        }
 
         if (debug.get() && text.toLowerCase(Locale.ROOT).contains("teleport")) {
             String debugText = text
@@ -110,27 +118,49 @@ public class AutoTpAccept extends Module {
             return;
         }
 
-        String requester = matcher.group(1);
+        String requester = normalizeName(matcher.group(1));
 
-        if (!shouldAccept(requester)) {
-            if (chatFeedback.get()) {
-                info(
-                        "Ignoring teleport request from (highlight)%s(default) - not allowed by current mode.",
-                        requester
-                );
-            }
-
+        if (requester.isEmpty()) {
             return;
         }
 
-        ChatUtils.sendPlayerMsg("/tpy " + requester);
+        handleRequest(requester);
+    }
 
-        if (chatFeedback.get()) {
-            info(
-                    "Auto-accepted teleport request from (highlight)%s(default).",
-                    requester
-            );
+    private void handleRequest(String requester) {
+        synchronized (actionLock) {
+            long now = System.currentTimeMillis();
+
+            if (now - lastActionAt < ACTION_COOLDOWN_MS) {
+                return;
+            }
+
+            lastActionAt = now;
+
+            if (!shouldAccept(requester)) {
+                if (chatFeedback.get()) {
+                    info(
+                            "Ignoring teleport request from (highlight)%s(default) - not allowed by current mode.",
+                            requester
+                    );
+                }
+
+                return;
+            }
+
+            ChatUtils.sendPlayerMsg("/tpy " + requester);
+
+            if (chatFeedback.get()) {
+                info("Auto-accepted teleport request from " + requester + ".");
+            }
         }
+    }
+
+    private String normalizeName(String name) {
+        return name
+                .replaceAll("\u00a7.", "")
+                .replaceAll("[^\\x20-\\x7E]", "")
+                .trim();
     }
 
     private boolean shouldAccept(String requester) {
@@ -146,12 +176,6 @@ public class AutoTpAccept extends Module {
     }
 
     private boolean isEnemy(String requester) {
-        for (String enemy : enemyNames.get()) {
-            if (enemy.equalsIgnoreCase(requester)) {
-                return true;
-            }
-        }
-
-        return false;
+        return Enemies.get().isEnemy(requester);
     }
 }

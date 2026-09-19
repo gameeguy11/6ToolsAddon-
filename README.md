@@ -115,6 +115,58 @@ Settings:
   ("<n> wants to teleport to you."), only needs changing on a different server.
 - `chat-feedback`, prints who got auto-accepted (or skipped) in chat.
 
+### Discord Notifier
+Forwards chat, and optionally death/kill info, to a Discord webhook, so you can keep an
+eye on things without the game open. Independent toggles, mix and match:
+- **Chat itself** (`send-chat`), every chat message, optionally excluding your own.
+- **Coordinates** (`send-coords`), messages from other players that contain coordinates,
+  tagged `[Coords]`.
+- **Your death coordinates** (`send-death-coords`), where you died, tagged `[Death]`.
+- **Players you killed** (`send-kills`), tagged `[Kill]`.
+- **Who killed you** (`send-killed-by`), tagged `[Killed By]`.
+
+These can overlap (e.g. a coordinate message with `send-chat` also on gets sent twice,
+once plain and once tagged), since you asked for them as independent toggles.
+
+Setup: see the **Discord Webhook Setup** section below.
+
+Settings:
+- `send-chat`, forwards every chat message.
+- `send-coords`, forwards messages containing coordinates from other players.
+- `ignore-own-messages`, skips your own lines (matched by the vanilla `<YourName>` chat
+  prefix, so a server with a custom chat format may not catch them, turn this off if so).
+- `coord-pattern`, the regex used to detect coordinates in a message, adjust it if your
+  server shares coordinates in an unusual format.
+- `send-death-coords` / `send-kills` / `send-killed-by`, the death/kill toggles above.
+- `death-pattern`, the regex used to detect death messages and pull out who died
+  (`<victim>`) and who killed them (`<killer>`, if the death had an attacker). The default
+  covers vanilla's common death messages; adjust it if your server rewords them.
+
+Messages are queued and sent in batches every 2 seconds rather than instantly, so a busy
+chat doesn't spam or rate-limit your webhook.
+
+### Chat Highlighter
+Colors player names in chat: yourself, anyone on your Meteor friends list, and anyone on
+a custom enemy list, each independently toggleable with its own color.
+
+To use it, just enable the module, no other setup needed. Defaults already highlight all
+three.
+
+Settings:
+- `highlight-self` / `self-color`, colors your own name.
+- `highlight-friends` / `friend-color`, colors names on your real Meteor friends list.
+- `highlight-enemies` / `enemy-color`, colors names on the `enemy-names` list below.
+- `enemy-names`, player names to treat as enemies. Not case sensitive, and separate from
+  Auto TP Accept's and Player Tracker's own enemy lists (Meteor has no built-in enemy
+  list, so each module that needs one keeps its own).
+- `username-pattern`, the regex used to find the sender's name at the start of a chat line
+  (capture group 1). Default matches `Name » message` formatting (6b6t/Meteor style),
+  adjust it if your server's chat format differs.
+- `debug`, prints each chat line's exact characters (as unicode escapes) plus match/color
+  info to help you tune `username-pattern` for your server.
+
+If a name matches more than one category, priority is self > friend > enemy.
+
 ### Whisper Logger
 Keeps a running, Discord-styled HTML archive of your whisper conversations, one file per
 person you've messaged. Adapted from Plumbiller's addon, see Credits.
@@ -230,8 +282,8 @@ turn individual stats on or off in the **Stats** setting group.
 
 ## Commands
 
-`.invsorter` and `.dub` (use whatever command prefix your Meteor build is set to, not the
-dot):
+`.invsorter`, `.dub`, and `.setdiscord` (use whatever command prefix your Meteor build is
+set to, not the dot):
 
 | Subcommand                | Effect                                            |
 |-----------------------------|------------------------------------------------------|
@@ -243,6 +295,32 @@ dot):
 | `.dub`                       | Count double chests across every loaded chunk       |
 | `.dub rendered`              | Count double chests within an 8-chunk radius        |
 | `.dub rendered <radius>`     | Count double chests within a custom chunk radius    |
+| `.setdiscord set <url>`      | Set the Discord webhook URL used by Discord Notifier |
+| `.setdiscord clear`          | Clear the saved webhook URL                         |
+
+## Discord Webhook Setup
+
+Discord Notifier needs a webhook URL before it can send anything. A webhook is a link tied
+to one specific Discord channel, anything posted to it shows up as a message in that
+channel, it isn't tied to a Discord account or bot.
+
+1. In Discord, open the server/channel you want chat forwarded to.
+2. Go to that channel's settings → **Integrations** → **Webhooks** → **New Webhook** (or
+   **Create Webhook**).
+3. Give it a name/avatar if you want, then click **Copy Webhook URL**. It looks like
+   `https://discord.com/api/webhooks/123456789012345678/AbCdEf...`.
+4. In Minecraft, run `.setdiscord set <paste the URL here>`.
+5. Enable the **Discord Notifier** module and turn on `send-chat` and/or `send-coords`,
+   whichever you want forwarded.
+
+The URL is only ever stored locally in your Meteor config, it's never shown back in chat
+or logged, and `.setdiscord set` validates that what you paste actually looks like a
+Discord webhook URL before accepting it. Run `.setdiscord clear` any time to remove it
+(the module just stops sending, no need to disable it first).
+
+Treat the webhook URL like a password, anyone who has it can post messages into that
+Discord channel. If you ever want to revoke it, delete the webhook from that channel's
+Integrations settings in Discord and create a new one.
 
 ## Building
 
