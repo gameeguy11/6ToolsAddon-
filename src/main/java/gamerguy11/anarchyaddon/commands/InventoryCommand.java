@@ -20,7 +20,9 @@ public class InventoryCommand extends Command {
 
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> builder) {
-        builder.then(literal("save").then(argument("name", StringArgumentType.word()).executes(ctx -> {
+        builder.then(literal("save").then(argument("name", StringArgumentType.word())
+            .suggests((context, suggestionsBuilder) -> CommandSource.suggestMatching(module().inventoryNames().stream(), suggestionsBuilder))
+            .executes(ctx -> {
             String name = StringArgumentType.getString(ctx, "name");
             InventorySorterModule module = module();
 
@@ -34,7 +36,9 @@ public class InventoryCommand extends Command {
             return SINGLE_SUCCESS;
         })));
 
-        builder.then(literal("load").then(argument("name", StringArgumentType.word()).executes(ctx -> {
+        builder.then(literal("load").then(argument("name", StringArgumentType.word())
+            .suggests((context, suggestionsBuilder) -> CommandSource.suggestMatching(module().inventoryNames().stream(), suggestionsBuilder))
+            .executes(ctx -> {
             String name = StringArgumentType.getString(ctx, "name");
             InventorySorterModule module = module();
 
@@ -50,7 +54,9 @@ public class InventoryCommand extends Command {
             return SINGLE_SUCCESS;
         })));
 
-        builder.then(literal("delete").then(argument("name", StringArgumentType.word()).executes(ctx -> {
+        builder.then(literal("delete").then(argument("name", StringArgumentType.word())
+            .suggests((context, suggestionsBuilder) -> CommandSource.suggestMatching(module().inventoryNames().stream(), suggestionsBuilder))
+            .executes(ctx -> {
             String name = StringArgumentType.getString(ctx, "name");
             InventorySorterModule module = module();
 

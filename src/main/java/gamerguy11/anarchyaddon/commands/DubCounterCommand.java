@@ -10,12 +10,16 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.command.CommandSource;
 import net.minecraft.world.chunk.WorldChunk;
 
+import java.util.List;
+
 import static meteordevelopment.meteorclient.MeteorClient.mc;
 
 public class DubCounterCommand extends Command {
     public static int lastDubs = -1;
     public static int lastNormalChests = -1;
     public static CountMode lastMode = null;
+
+    private static final List<String> RADIUS_SUGGESTIONS = List.of("4", "8", "16", "32");
 
     public DubCounterCommand() {
         super("dub", "Counts how many double chests are nearby.");
@@ -31,7 +35,9 @@ public class DubCounterCommand extends Command {
         builder.then(literal("rendered").executes(ctx -> {
             count(CountMode.Rendered, 8);
             return SINGLE_SUCCESS;
-        }).then(argument("radius", IntegerArgumentType.integer(1, 32)).executes(ctx -> {
+        }).then(argument("radius", IntegerArgumentType.integer(1, 32))
+            .suggests((context, suggestionsBuilder) -> CommandSource.suggestMatching(RADIUS_SUGGESTIONS.stream(), suggestionsBuilder))
+            .executes(ctx -> {
             int radius = IntegerArgumentType.getInteger(ctx, "radius");
             count(CountMode.Rendered, radius);
             return SINGLE_SUCCESS;

@@ -8,6 +8,11 @@ import meteordevelopment.meteorclient.commands.Command;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import net.minecraft.command.CommandSource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static meteordevelopment.meteorclient.MeteorClient.mc;
+
 public class EnemyCommand extends Command {
     public EnemyCommand() {
         super("enemy", "Manages your enemies list.");
@@ -15,7 +20,18 @@ public class EnemyCommand extends Command {
 
     @Override
     public void build(LiteralArgumentBuilder<CommandSource> builder) {
-        builder.then(literal("add").then(argument("name", StringArgumentType.word()).executes(ctx -> {
+        builder.then(literal("add").then(argument("name", StringArgumentType.word())
+            .suggests((context, suggestionsBuilder) -> {
+                if (mc.getNetworkHandler() == null) return suggestionsBuilder.buildFuture();
+
+                List<String> names = new ArrayList<>();
+                for (var entry : mc.getNetworkHandler().getPlayerList()) {
+                    names.add(entry.getProfile().name());
+                }
+
+                return CommandSource.suggestMatching(names.stream(), suggestionsBuilder);
+            })
+            .executes(ctx -> {
             String name = StringArgumentType.getString(ctx, "name");
 
             if (Enemies.get().add(new Enemy(name))) {
@@ -27,7 +43,16 @@ public class EnemyCommand extends Command {
             return SINGLE_SUCCESS;
         })));
 
-        builder.then(literal("remove").then(argument("name", StringArgumentType.word()).executes(ctx -> {
+        builder.then(literal("remove").then(argument("name", StringArgumentType.word())
+            .suggests((context, suggestionsBuilder) -> {
+                List<String> names = new ArrayList<>();
+                for (Enemy enemy : Enemies.get()) {
+                    names.add(enemy.getName());
+                }
+
+                return CommandSource.suggestMatching(names.stream(), suggestionsBuilder);
+            })
+            .executes(ctx -> {
             String name = StringArgumentType.getString(ctx, "name");
             Enemy enemy = Enemies.get().get(name);
 
