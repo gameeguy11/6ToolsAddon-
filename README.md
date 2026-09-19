@@ -8,6 +8,7 @@ own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff
 #### I would appreciate it if 6b6t players paid me some Murphcoin in the Legion Discord server.
 #### .pay @gamerguy_11 any amount you feel is right
 #### Tysm for feeding my addiction
+#### I might display big donators if they send proof
 
 ## Unblock Servers
 Prevents known anarchy servers from being flagged as blocked by Mojang's server
