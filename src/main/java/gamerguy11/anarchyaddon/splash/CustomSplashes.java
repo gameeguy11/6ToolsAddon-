@@ -11,7 +11,7 @@ public final class CustomSplashes {
     static {
         SPLASHES = new ArrayList<>();
         SPLASHES.add("FUCK MOJANG");
-        SPLASHES.add("TAKE THAT MIRCOSLOP");
+        SPLASHES.add("Based anarchy mod.");
     }
 
     private static final Random RANDOM = new Random();
