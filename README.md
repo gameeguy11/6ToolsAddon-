@@ -10,6 +10,8 @@ own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff
 #### Tysm for feeding my addiction
 #### I might display big donators if they send proof
 
+## Using this addon might give you 2 **FREE** homes
+
 ## Unblock Servers
 Prevents known anarchy servers from being flagged as blocked by Mojang's server
 blocklist, so you can actually connect to them.
