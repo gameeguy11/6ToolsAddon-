@@ -8,11 +8,6 @@ own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff
 Prevents known anarchy servers from being flagged as blocked by Mojang's server
 blocklist, so you can actually connect to them.
 
-Just enable it, there's nothing to configure. It ships with a default list of known
-anarchy server domains (6b6t and its mirrors, 8b8t, 7b7t, and a few others) and also
-fetches an up-to-date list from 6b6t's own API on activation, falling back to the built-in
-defaults if that fails.
-
 ## Requirements
 
 | Component     | Version                    |
