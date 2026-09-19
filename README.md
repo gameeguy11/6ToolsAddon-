@@ -8,7 +8,7 @@ own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff
 #### I would appreciate it if 6b6t players paid me some Murphcoin in the Legion Discord server.
 #### .pay @gamerguy_11 any amount you feel is right
 #### Tysm for feeding my addiction
-#### I might display big donators if they send proof
+#### The top 3 donaters will get a custom splash text
 
 ## Using this addon might give you 2 **FREE** homes
 
@@ -216,6 +216,35 @@ instead.
 ### Printer
 **Under development**
 
+### Sound Editor
+Plays **your own** sound files for addon events - nothing is bundled, so a sound type stays
+silent until you put a file in its folder. Folders are created automatically in
+`.minecraft/config/anarchyaddon/sounds/`:
+
+| Folder | Plays when |
+|--------|------------|
+| `gui_hover/` | the mouse moves onto a module button in Meteor's click GUI |
+| `gui_click_left/` / `gui_click_right/` | you left / right click a module button |
+| `module_on/` / `module_off/` | you switch any module on / off |
+| `typing/` | you press a key with the chat box open |
+| `chat_keyword/` | a chat message contains one of your `keywords` |
+| `enemy_spotted/` | a player on your enemies list renders in |
+| `death/` | you die |
+
+Supports `.ogg` and `.wav`. Put as many files as you like in one folder, then per sound type
+choose **Random**, **Sequential** or **Specific** (with a file name). The module's window has a
+file list for every folder with **Play** and **Use** buttons, plus *Open sounds folder* and
+*Reload files*. Each type also has volume, pitch, pitch-variation and cooldown settings.
+The module must be enabled for any sound to play. `enemy_spotted/` only reacts to players on
+your enemies list (`.enemy add <name>`); `death/` needs nothing extra.
+
+### Parkinsons
+A blunt freecam: the camera flies away from your body while the real player stays put.
+**Warnings:** your player can still be attacked/killed while you look around, the camera is
+fast enough to outrun loaded chunks, and it's a fake client-side entity so visual glitches are
+possible. Don't combine it with Meteor's Freecam. Adapted from the Genyo addon's module of the
+same name (wuritz, Barnika18, Awakeyv).
+
 ## HUD elements 
 
 ### Player Tracker
@@ -265,10 +294,18 @@ turn individual stats on or off in the **Stats** setting group.
   picked-up items can each be narrowed to a specific list via their own count-mode and
   list setting.
 
+## Enemies List
+A global enemies list, separate from Player Tracker's and Auto TP Accept's own
+independent `enemy-names` settings (each of those predates this and still keeps its own
+list). This one is shared by **Chat Highlighter** and **Sound Editor**'s `enemy_spotted`
+sound, managed entirely through the `.enemy` command below, and persists to
+`.minecraft/config/anarchyaddon-enemies.txt`. `.enemy add`/`.enemy remove` tab-complete
+(add suggests currently loaded player names, remove suggests names already on the list).
+
 ## Commands
 
-`.invsorter`, `.dub`, and `.setdiscord` (use whatever command prefix your Meteor build is
-set to, not the dot):
+`.invsorter`, `.dub`, `.setdiscord`, and `.enemy` (use whatever command prefix your
+Meteor build is set to, not the dot):
 
 | Subcommand                | Effect                                            |
 |-----------------------------|------------------------------------------------------|
@@ -282,6 +319,9 @@ set to, not the dot):
 | `.dub rendered <radius>`     | Count double chests within a custom chunk radius    |
 | `.setdiscord set <url>`      | Set the Discord webhook URL used by Discord Notifier |
 | `.setdiscord clear`          | Clear the saved webhook URL                         |
+| `.enemy add <name>`          | Add a name to the shared enemies list (tab-completes online players) |
+| `.enemy remove <name>`       | Remove a name from the list (tab-completes existing entries) |
+| `.enemy list`                 | List everyone currently on the enemies list          |
 
 ## Discord Webhook Setup
 

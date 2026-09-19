@@ -9,6 +9,8 @@
     "shulkerview.MixinCreativeInventoryScreen",
     "anarchymod.BlockedServersMixin",
     "anarchymod.JoinNotifierMixin",
-    "splash.SplashTextResourceSupplierMixin"
+    "splash.SplashTextResourceSupplierMixin",
+    "sound.MixinWWidget",
+    "sound.MixinModule"
   ]
 }

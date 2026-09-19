@@ -9,6 +9,7 @@ import gamerguy11.anarchyaddon.gui.EnemiesTab;
 import gamerguy11.anarchyaddon.hud.DubCounterHud;
 import gamerguy11.anarchyaddon.hud.PlayerTrackerHud;
 import gamerguy11.anarchyaddon.hud.StatsHud;
+import gamerguy11.anarchyaddon.sound.SoundEngine;
 import gamerguy11.anarchyaddon.modules.Efly;
 import gamerguy11.anarchyaddon.modules.Ez;
 import gamerguy11.anarchyaddon.modules.InventorySorterModule;
@@ -17,7 +18,9 @@ import gamerguy11.anarchyaddon.modules.utility.AutoTpAccept;
 import gamerguy11.anarchyaddon.modules.utility.ChatHighlighter;
 import gamerguy11.anarchyaddon.modules.utility.DiscordNotifier;
 import gamerguy11.anarchyaddon.modules.utility.ShulkerView;
+import gamerguy11.anarchyaddon.modules.utility.SoundEditor;
 import gamerguy11.anarchyaddon.modules.utility.WhisperLogger;
+import gamerguy11.anarchyaddon.modules.visual.Parkinsons;
 import gamerguy11.anarchyaddon.modules.visual.SwingSpeed;
 import gamerguy11.anarchyaddon.anarchymod.Domains;
 import gamerguy11.anarchyaddon.anarchymod.JoinPayload;
@@ -48,6 +51,8 @@ public class AnarchyAddon extends MeteorAddon {
     public void onInitialize() {
         LOG.info("Initializing AnarchyAddon");
 
+        SoundEngine.INSTANCE.rescan();
+
         JoinPayload.register();
         Domains.initialize();
 
@@ -61,6 +66,8 @@ public class AnarchyAddon extends MeteorAddon {
         Modules.get().add(new ShulkerView());
         Modules.get().add(new WhisperLogger());
         Modules.get().add(new SwingSpeed());
+        Modules.get().add(new Parkinsons());
+        Modules.get().add(new SoundEditor());
 
         Commands.add(new InventoryCommand());
         Commands.add(new DubCounterCommand());

@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SplashTextResourceSupplier.class)
 public class SplashTextResourceSupplierMixin {
 
-    // In 1.21.11 the old getSplashText():String was replaced by get():SplashTextRenderer.
     @Inject(method = "get", at = @At("RETURN"), cancellable = true)
     private void anarchyaddon$overrideSplash(CallbackInfoReturnable<SplashTextRenderer> cir) {
         String custom = CustomSplashes.pick();
