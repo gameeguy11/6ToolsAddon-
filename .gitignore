@@ -6,3 +6,5 @@ out/
 *.iml
 .DS_Store
 version.properties
+/src/main/java/gamerguy11/anarchyaddon/modules/world/Printer.java
+/src/main/java/gamerguy11/anarchyaddon/printer/
