@@ -4,6 +4,8 @@ A [Meteor Client](https://github.com/MeteorDevelopment/meteor-client) addon for 
 **1.21.11**, built for the 6b6t anarchy server. Modules and HUD elements live under their
 own "6Tools Addon" category and HUD group, separate from Meteor's built-in stuff.
 
+#### Showcase: https://medal.tv/games/minecraft/clips/nz5q0SlHc9e2K63a6?invite=cr-MSwxcHEsMzIxOTEyMjI1
+
 ## Supporting the Creator
 #### I would appreciate it if 6b6t players paid me some Murphcoin in the Legion Discord server.
 #### .pay @gamerguy_11 any amount you feel is right
