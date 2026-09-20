@@ -44,13 +44,6 @@ public class AutoTpAccept extends Module {
             .build()
     );
 
-    private final Setting<Boolean> ignoreEnemies = sgGeneral.add(new BoolSetting.Builder()
-            .name("ignore-enemy-players")
-            .description("Never react to requests from enemies, even with accept-everyone on.")
-            .defaultValue(false)
-            .build()
-    );
-
     private final Setting<Boolean> denyEnemies = sgGeneral.add(new BoolSetting.Builder()
             .name("deny-enemies")
             .description("Answer requests from enemies with /tpn.")
@@ -154,7 +147,6 @@ public class AutoTpAccept extends Module {
         boolean friend = isFriend(requester);
         boolean enemy = isEnemy(requester);
 
-        // Home protection beats everything else.
         Home home = HomeStore.protectedHomeAtPlayer();
         if (home != null && !(friend && home.allowFriends)) {
             if (home.denyInstead) ChatUtils.sendPlayerMsg("/tpn " + requester);
@@ -163,11 +155,6 @@ public class AutoTpAccept extends Module {
                 info("Home (highlight)%s(default) is protected - %s request from (highlight)%s(default).",
                         home.name, home.denyInstead ? "denied" : "ignored", requester);
             }
-            return;
-        }
-
-        if (enemy && ignoreEnemies.get()) {
-            if (chatFeedback.get()) info("Ignoring request from enemy (highlight)%s(default).", requester);
             return;
         }
 

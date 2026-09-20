@@ -99,16 +99,37 @@ Settings:
 Automatically runs `/tpy <player>` when a teleport request comes in, since 6b6t requires
 that manually.
 
-To use it, enable the module and pick a `mode`.
+To use it, enable the module and turn on who you want to accept.
 
 Settings:
-- `mode`: `Friends` (Meteor's real friends list), `Enemies` (the `enemy-names` list
-  below), or `Everyone`.
-- `enemy-names`, player names to auto-accept when `mode` is `Enemies`. Not case sensitive.
+- `accept-friends` (on by default), `accept-enemies`, `accept-everyone`, who gets
+  auto-accepted. Friends come from Meteor's friends list, enemies from the Enemies tab
+  and the `enemy-names` list.
+- `deny-enemies`, `deny-friends`, answer requests from that group with `/tpn` instead.
+- `enemy-names`, extra player names treated as enemies. Not case sensitive.
 - `request-pattern`, the regex used to detect a teleport request and pull the requester's
   name out of it (capture group 1). Default matches 6b6t's actual `/tpa` notification
-  ("<n> wants to teleport to you."), only needs changing on a different server.
-- `chat-feedback`, prints who got auto-accepted (or skipped) in chat.
+  (\"<n> wants to teleport to you.\"), only needs changing on a different server.
+- `chat-feedback`, prints who got auto-accepted, denied, or skipped in chat.
+
+While you are standing inside a protected home (see Homes), requests are never accepted.
+
+### Homes
+Save areas as homes and protect them from teleport requests. Open the module's settings
+and press `Manage Homes`.
+
+- A home is a circle in X/Z only, all heights count. The radius is measured from the
+  center, so radius 50 is a circle 100 blocks across.
+- `default-radius`, radius used for new homes. `Apply radius to all existing homes` sets
+  every saved home to it.
+- Each home has its own name, coordinates, radius, and dimension. Nether and Overworld
+  homes convert at 8:1, End homes only count in the End.
+- `protect`, Auto TP Accept won't accept requests while you're inside this home.
+- `deny-requests`, answer with `/tpn` instead of silently ignoring.
+- `allow-friends`, friends can still teleport to you inside this home.
+
+Homes are saved in `meteor-client/sixtoolsaddon-homes.json`. The home system is adapted
+from Powie69's 6Bees addon.
 
 ### Discord Notifier
 Forwards chat, and optionally death/kill info, to a Discord webhook, so you can keep an
