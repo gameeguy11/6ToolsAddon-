@@ -11,6 +11,8 @@
     "anarchymod.JoinNotifierMixin",
     "splash.SplashTextResourceSupplierMixin",
     "sound.MixinWWidget",
-    "sound.MixinModule"
+    "sound.MixinModule",
+    "swing.LivingEntitySwingAccessor",
+    "swing.LivingEntitySwingSpeedMixin"
   ]
 }

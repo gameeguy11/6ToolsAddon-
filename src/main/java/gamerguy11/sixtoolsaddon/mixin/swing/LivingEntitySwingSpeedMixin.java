@@ -12,14 +12,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public class LivingEntitySwingSpeedMixin {
 
-    @Inject(method = "getHandSwingDuration", at = @At("RETURN"), cancellable = true)
-    private void sixtoolsaddon$swingSpeed(CallbackInfoReturnable<Integer> cir) {
+    @Inject(method = "getHandSwingProgress", at = @At("RETURN"), cancellable = true)
+    private void sixtoolsaddon$swingProgress(float tickDelta, CallbackInfoReturnable<Float> cir) {
         if ((Object) this != MinecraftClient.getInstance().player) return;
 
         SwingSpeed module = Modules.get().get(SwingSpeed.class);
         if (module == null || !module.isActive()) return;
 
-        int duration = Math.max(1, (int) Math.round(cir.getReturnValueI() / module.getSpeedMultiplier()));
-        cir.setReturnValue(duration);
+        cir.setReturnValue(module.getRenderProgress(tickDelta));
     }
 }

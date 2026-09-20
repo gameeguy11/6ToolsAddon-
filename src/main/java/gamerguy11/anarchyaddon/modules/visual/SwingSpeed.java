@@ -13,7 +13,8 @@ public class SwingSpeed extends Module {
             .name("speed")
             .description("Multiplier for how fast your own arm swing animation plays. 1 = vanilla speed.")
             .defaultValue(1.0)
-            .min(0.1)
+            .min(0.01)
+            .sliderMin(0.01)
             .sliderMax(5.0)
             .build()
     );

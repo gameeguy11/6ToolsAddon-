@@ -50,10 +50,6 @@ public class AnarchyAddon extends MeteorAddon {
 
     private static final GithubRepo REPO = new GithubRepo("gameeguy11", "AnarchyAddon");
 
-    // Repo's very first commit. Pinning getCommit() to this (instead of the commit each
-    // build was actually made from) makes Meteor's "compare" call always span the whole
-    // history of the repo, so the commits popup always shows every commit, not just the
-    // ones since your last build.
     private static final String FIRST_COMMIT = "0e646b42cc8ab11c24a48417f14d295d393a09a7";
 
     @Override
