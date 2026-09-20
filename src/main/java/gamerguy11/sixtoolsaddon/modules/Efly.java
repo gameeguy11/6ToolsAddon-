@@ -534,7 +534,7 @@ public class Efly extends Module {
     public void onDeactivate() {
         mappingWaitingForChunks = false;
 
-        if (autoPilot.get()) mc.options.forwardKey.setPressed(false);
+        if (autoPilot.get() && !isKeyPhysicallyPressed(mc.options.forwardKey)) mc.options.forwardKey.setPressed(false);
         releaseAvoidance();
         releaseVerticalStep();
 
@@ -611,7 +611,7 @@ public class Efly extends Module {
             mappingWaitingForChunks = false;
 
             if (lastForwardPressed) {
-                mc.options.forwardKey.setPressed(false);
+                if (!isKeyPhysicallyPressed(mc.options.forwardKey)) mc.options.forwardKey.setPressed(false);
                 lastForwardPressed = false;
             }
         }
@@ -1325,7 +1325,7 @@ public class Efly extends Module {
         avoidanceLateralDir = null;
 
         if (!avoidanceSteering) return;
-        mc.options.forwardKey.setPressed(false);
+        if (!isKeyPhysicallyPressed(mc.options.forwardKey)) mc.options.forwardKey.setPressed(false);
         mc.options.backKey.setPressed(false);
         mc.options.leftKey.setPressed(false);
         mc.options.rightKey.setPressed(false);
@@ -1353,6 +1353,8 @@ public class Efly extends Module {
     }
 
     private boolean isKeyPhysicallyPressed(KeyBinding binding) {
+        if (ForeverForward.isHolding(binding)) return true;
+
         if (mc.getWindow() == null) return binding.isPressed();
 
         InputUtil.Key key = InputUtil.fromTranslationKey(binding.getBoundKeyTranslationKey());

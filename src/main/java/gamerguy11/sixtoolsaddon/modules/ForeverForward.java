@@ -6,7 +6,9 @@ import meteordevelopment.meteorclient.settings.BoolSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.systems.modules.Module;
+import meteordevelopment.meteorclient.systems.modules.Modules;
 import meteordevelopment.orbit.EventHandler;
+import meteordevelopment.orbit.EventPriority;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 
@@ -32,10 +34,34 @@ public class ForeverForward extends Module {
         if (!isKeyPhysicallyPressed(mc.options.sprintKey)) mc.options.sprintKey.setPressed(false);
     }
 
+    @Override
+    public void onActivate() {
+        press();
+    }
+
+    @EventHandler(priority = EventPriority.HIGH)
+    private void onTickPre(TickEvent.Pre event) {
+        press();
+    }
+
     @EventHandler
-    private void onTick(TickEvent.Post event) {
+    private void onTickPost(TickEvent.Post event) {
+        press();
+    }
+
+    private void press() {
+        if (mc.player == null) return;
+
         mc.options.forwardKey.setPressed(true);
         mc.options.sprintKey.setPressed(sprint.get() || isKeyPhysicallyPressed(mc.options.sprintKey));
+    }
+
+    public static boolean isHolding(KeyBinding binding) {
+        ForeverForward module = Modules.get().get(ForeverForward.class);
+        if (module == null || !module.isActive()) return false;
+
+        return binding == module.mc.options.forwardKey
+            || (binding == module.mc.options.sprintKey && module.sprint.get());
     }
 
     private boolean isKeyPhysicallyPressed(KeyBinding binding) {
