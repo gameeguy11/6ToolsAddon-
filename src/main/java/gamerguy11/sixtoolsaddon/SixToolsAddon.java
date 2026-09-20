@@ -11,12 +11,14 @@ import gamerguy11.sixtoolsaddon.hud.PlayerTrackerHud;
 import gamerguy11.sixtoolsaddon.hud.StatsHud;
 import gamerguy11.sixtoolsaddon.sound.SoundEngine;
 import gamerguy11.sixtoolsaddon.modules.Efly;
+import gamerguy11.sixtoolsaddon.modules.ForeverForward;
 import gamerguy11.sixtoolsaddon.modules.Ez;
 import gamerguy11.sixtoolsaddon.modules.InventorySorterModule;
 import gamerguy11.sixtoolsaddon.modules.utility.AntiDrop;
 import gamerguy11.sixtoolsaddon.modules.utility.AutoTpAccept;
 import gamerguy11.sixtoolsaddon.modules.utility.ChatHighlighter;
 import gamerguy11.sixtoolsaddon.modules.utility.DiscordNotifier;
+import gamerguy11.sixtoolsaddon.modules.utility.Homes;
 import gamerguy11.sixtoolsaddon.modules.utility.ShulkerView;
 import gamerguy11.sixtoolsaddon.modules.utility.SoundEditor;
 import gamerguy11.sixtoolsaddon.modules.utility.WhisperLogger;
@@ -76,10 +78,12 @@ public class SixToolsAddon extends MeteorAddon {
         Domains.initialize();
 
         Modules.get().add(new Efly());
+        Modules.get().add(new ForeverForward());
         Modules.get().add(new Ez());
         Modules.get().add(new InventorySorterModule());
         Modules.get().add(new AntiDrop());
         Modules.get().add(new AutoTpAccept());
+        Modules.get().add(new Homes());
         Modules.get().add(new DiscordNotifier());
         Modules.get().add(new ChatHighlighter());
         Modules.get().add(new ShulkerView());

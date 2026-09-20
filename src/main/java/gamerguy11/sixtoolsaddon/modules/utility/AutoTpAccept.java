@@ -1,9 +1,11 @@
 package gamerguy11.sixtoolsaddon.modules.utility;
 
 import gamerguy11.sixtoolsaddon.SixToolsAddon;
+import gamerguy11.sixtoolsaddon.homes.Home;
+import gamerguy11.sixtoolsaddon.homes.HomeStore;
+import gamerguy11.sixtoolsaddon.systems.enemies.Enemies;
 import meteordevelopment.meteorclient.events.game.ReceiveMessageEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
-import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
 import meteordevelopment.meteorclient.settings.StringListSetting;
@@ -19,25 +21,53 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class AutoTpAccept extends Module {
-    public enum Mode {
-        Friends,
-        Enemies,
-        Everyone
-    }
-
     private final SettingGroup sgGeneral = settings.getDefaultGroup();
 
-    private final Setting<Mode> mode = sgGeneral.add(new EnumSetting.Builder<Mode>()
-            .name("mode")
-            .description("Who to auto-accept teleport requests from.")
-            .defaultValue(Mode.Friends)
+    private final Setting<Boolean> acceptFriends = sgGeneral.add(new BoolSetting.Builder()
+            .name("accept-friends")
+            .description("Auto-accept requests from friends.")
+            .defaultValue(true)
+            .build()
+    );
+
+    private final Setting<Boolean> acceptEnemies = sgGeneral.add(new BoolSetting.Builder()
+            .name("accept-enemies")
+            .description("Auto-accept requests from enemies.")
+            .defaultValue(false)
+            .build()
+    );
+
+    private final Setting<Boolean> acceptEveryone = sgGeneral.add(new BoolSetting.Builder()
+            .name("accept-everyone")
+            .description("Auto-accept requests from everyone.")
+            .defaultValue(false)
+            .build()
+    );
+
+    private final Setting<Boolean> ignoreEnemies = sgGeneral.add(new BoolSetting.Builder()
+            .name("ignore-enemy-players")
+            .description("Never react to requests from enemies, even with accept-everyone on.")
+            .defaultValue(false)
+            .build()
+    );
+
+    private final Setting<Boolean> denyEnemies = sgGeneral.add(new BoolSetting.Builder()
+            .name("deny-enemies")
+            .description("Answer requests from enemies with /tpn.")
+            .defaultValue(false)
+            .build()
+    );
+
+    private final Setting<Boolean> denyFriends = sgGeneral.add(new BoolSetting.Builder()
+            .name("deny-friends")
+            .description("Answer requests from friends with /tpn.")
+            .defaultValue(false)
             .build()
     );
 
     private final Setting<List<String>> enemyNames = sgGeneral.add(new StringListSetting.Builder()
             .name("enemy-names")
-            .description("Player names treated as enemies. Only used when mode is Enemies.")
-            .visible(() -> mode.get() == Mode.Enemies)
+            .description("Extra player names treated as enemies (the Enemies tab is always used too).")
             .build()
     );
 
@@ -71,7 +101,7 @@ public class AutoTpAccept extends Module {
         super(
                 SixToolsAddon.CATEGORY,
                 "auto-tpy",
-                "Automatically runs /tpy for teleport requests from friends, enemies, or everyone."
+                "Automatically runs /tpy for teleport requests. Respects protected homes."
         );
     }
 
@@ -121,14 +151,36 @@ public class AutoTpAccept extends Module {
         lastHandledRequester = requester;
         lastHandledAt = now;
 
-        if (!shouldAccept(requester)) {
-            if (chatFeedback.get()) {
-                info(
-                        "Ignoring teleport request from (highlight)%s(default) - not allowed by current mode.",
-                        requester
-                );
-            }
+        boolean friend = isFriend(requester);
+        boolean enemy = isEnemy(requester);
 
+        // Home protection beats everything else.
+        Home home = HomeStore.protectedHomeAtPlayer();
+        if (home != null && !(friend && home.allowFriends)) {
+            if (home.denyInstead) ChatUtils.sendPlayerMsg("/tpn " + requester);
+
+            if (chatFeedback.get()) {
+                info("Home (highlight)%s(default) is protected - %s request from (highlight)%s(default).",
+                        home.name, home.denyInstead ? "denied" : "ignored", requester);
+            }
+            return;
+        }
+
+        if (enemy && ignoreEnemies.get()) {
+            if (chatFeedback.get()) info("Ignoring request from enemy (highlight)%s(default).", requester);
+            return;
+        }
+
+        if ((enemy && denyEnemies.get()) || (friend && denyFriends.get())) {
+            ChatUtils.sendPlayerMsg("/tpn " + requester);
+            if (chatFeedback.get()) info("Denied teleport request from (highlight)%s(default).", requester);
+            return;
+        }
+
+        if (!shouldAccept(friend, enemy)) {
+            if (chatFeedback.get()) {
+                info("Ignoring teleport request from (highlight)%s(default) - not allowed by current settings.", requester);
+            }
             return;
         }
 
@@ -142,12 +194,9 @@ public class AutoTpAccept extends Module {
         }
     }
 
-    private boolean shouldAccept(String requester) {
-        return switch (mode.get()) {
-            case Everyone -> true;
-            case Friends -> isFriend(requester);
-            case Enemies -> isEnemy(requester);
-        };
+    private boolean shouldAccept(boolean friend, boolean enemy) {
+        if (acceptEveryone.get()) return true;
+        return (friend && acceptFriends.get()) || (enemy && acceptEnemies.get());
     }
 
     private boolean isFriend(String requester) {
@@ -155,6 +204,8 @@ public class AutoTpAccept extends Module {
     }
 
     private boolean isEnemy(String requester) {
+        if (Enemies.get().get(requester) != null) return true;
+
         for (String enemy : enemyNames.get()) {
             if (enemy.equalsIgnoreCase(requester)) {
                 return true;

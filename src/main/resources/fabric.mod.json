@@ -7,6 +7,7 @@
   "authors": ["Gamerguy11"],
   "icon": "assets/sixtoolsaddon/icon.png",
   "contributors": [
+    "Powie69 (Homes / base system is adapted from their 6Bees addon: https://github.com/Powie69/6Bees)",
     "Volizray (Efly is based on their VolytraFly-Addon: https://github.com/Volizray/VolytraFly-Addon)",
     "cattyngmd (Shulker View is adapted from their shulker-view: https://github.com/cattyngmd/shulker-view)",
     "Plumbiller (Whisper Logger is adapted from their PlumbillerPublic: https://github.com/Plumbiller/PlumbillerPublic)",
