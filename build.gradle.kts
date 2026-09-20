@@ -70,7 +70,7 @@ dependencies {
     // Fabric
     minecraft(libs.minecraft)
     // 1.21.11 is still obfuscated, so it needs Yarn mappings - this was missing entirely,
-    // which is why Loom couldn't produce named classes for Efly/AnarchyAddon to compile against.
+    // which is why Loom couldn't produce named classes for Efly/SixToolsAddon to compile against.
     mappings(variantOf(libs.yarn) { classifier("v2") })
     // Mod dependencies need modImplementation (not implementation) so Loom remaps them
     // to match your Yarn mappings instead of leaving them in intermediary names.

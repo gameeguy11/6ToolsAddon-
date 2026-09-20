@@ -1,29 +1,29 @@
-package gamerguy11.anarchyaddon;
+package gamerguy11.sixtoolsaddon;
 
 import com.mojang.logging.LogUtils;
-import gamerguy11.anarchyaddon.commands.DubCounterCommand;
-import gamerguy11.anarchyaddon.commands.EnemyCommand;
-import gamerguy11.anarchyaddon.commands.InventoryCommand;
-import gamerguy11.anarchyaddon.commands.SetDiscordCommand;
-import gamerguy11.anarchyaddon.gui.EnemiesTab;
-import gamerguy11.anarchyaddon.hud.DubCounterHud;
-import gamerguy11.anarchyaddon.hud.PlayerTrackerHud;
-import gamerguy11.anarchyaddon.hud.StatsHud;
-import gamerguy11.anarchyaddon.sound.SoundEngine;
-import gamerguy11.anarchyaddon.modules.Efly;
-import gamerguy11.anarchyaddon.modules.Ez;
-import gamerguy11.anarchyaddon.modules.InventorySorterModule;
-import gamerguy11.anarchyaddon.modules.utility.AntiDrop;
-import gamerguy11.anarchyaddon.modules.utility.AutoTpAccept;
-import gamerguy11.anarchyaddon.modules.utility.ChatHighlighter;
-import gamerguy11.anarchyaddon.modules.utility.DiscordNotifier;
-import gamerguy11.anarchyaddon.modules.utility.ShulkerView;
-import gamerguy11.anarchyaddon.modules.utility.SoundEditor;
-import gamerguy11.anarchyaddon.modules.utility.WhisperLogger;
-import gamerguy11.anarchyaddon.modules.visual.Parkinsons;
-import gamerguy11.anarchyaddon.modules.visual.SwingSpeed;
-import gamerguy11.anarchyaddon.anarchymod.Domains;
-import gamerguy11.anarchyaddon.anarchymod.JoinPayload;
+import gamerguy11.sixtoolsaddon.commands.DubCounterCommand;
+import gamerguy11.sixtoolsaddon.commands.EnemyCommand;
+import gamerguy11.sixtoolsaddon.commands.InventoryCommand;
+import gamerguy11.sixtoolsaddon.commands.SetDiscordCommand;
+import gamerguy11.sixtoolsaddon.gui.EnemiesTab;
+import gamerguy11.sixtoolsaddon.hud.DubCounterHud;
+import gamerguy11.sixtoolsaddon.hud.PlayerTrackerHud;
+import gamerguy11.sixtoolsaddon.hud.StatsHud;
+import gamerguy11.sixtoolsaddon.sound.SoundEngine;
+import gamerguy11.sixtoolsaddon.modules.Efly;
+import gamerguy11.sixtoolsaddon.modules.Ez;
+import gamerguy11.sixtoolsaddon.modules.InventorySorterModule;
+import gamerguy11.sixtoolsaddon.modules.utility.AntiDrop;
+import gamerguy11.sixtoolsaddon.modules.utility.AutoTpAccept;
+import gamerguy11.sixtoolsaddon.modules.utility.ChatHighlighter;
+import gamerguy11.sixtoolsaddon.modules.utility.DiscordNotifier;
+import gamerguy11.sixtoolsaddon.modules.utility.ShulkerView;
+import gamerguy11.sixtoolsaddon.modules.utility.SoundEditor;
+import gamerguy11.sixtoolsaddon.modules.utility.WhisperLogger;
+import gamerguy11.sixtoolsaddon.modules.visual.Parkinsons;
+import gamerguy11.sixtoolsaddon.modules.visual.SwingSpeed;
+import gamerguy11.sixtoolsaddon.anarchymod.Domains;
+import gamerguy11.sixtoolsaddon.anarchymod.JoinPayload;
 import meteordevelopment.meteorclient.addons.GithubRepo;
 import meteordevelopment.meteorclient.addons.MeteorAddon;
 import meteordevelopment.meteorclient.commands.Commands;
@@ -39,16 +39,16 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-public class AnarchyAddon extends MeteorAddon {
+public class SixToolsAddon extends MeteorAddon {
     public static final Logger LOG = LogUtils.getLogger();
 
-    public static final Category CATEGORY = new Category("AnarchyAddon");
+    public static final Category CATEGORY = new Category("6Tools Addon");
 
-    public static final HudGroup HUD_GROUP = new HudGroup("AnarchyAddon");
+    public static final HudGroup HUD_GROUP = new HudGroup("6Tools Addon");
 
     public static final Color THEME_COLOR = new Color(0, 182, 182);
 
-    private static final GithubRepo REPO = new GithubRepo("gameeguy11", "AnarchyAddon");
+    private static final GithubRepo REPO = new GithubRepo("gameeguy11", "6ToolsAddon-");
 
     // Repo's very first commit. Pinning getCommit() to this (instead of the commit each
     // build was actually made from) makes Meteor's "compare" call always span the whole
@@ -68,7 +68,7 @@ public class AnarchyAddon extends MeteorAddon {
 
     @Override
     public void onInitialize() {
-        LOG.info("Initializing AnarchyAddon");
+        LOG.info("Initializing SixToolsAddon");
 
         SoundEngine.INSTANCE.rescan();
 
@@ -108,7 +108,7 @@ public class AnarchyAddon extends MeteorAddon {
 
     @Override
     public String getPackage() {
-        return "gamerguy11.anarchyaddon";
+        return "gamerguy11.sixtoolsaddon";
     }
 
     private static void moveTabAfter(Class<? extends Tab> tabToMove, Class<? extends Tab> anchor) {

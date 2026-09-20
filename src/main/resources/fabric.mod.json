@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "anarchyaddon",
+  "id": "sixtoolsaddon",
   "version": "${version}",
-  "name": "AnarchyAddon",
+  "name": "6Tools Addon",
   "description": "A Meteor Client addon for the anarchy server 6b6t.",
   "authors": ["Gamerguy11"],
-  "icon": "assets/anarchyaddon/icon.png",
+  "icon": "assets/sixtoolsaddon/icon.png",
   "contributors": [
     "Volizray (Efly is based on their VolytraFly-Addon: https://github.com/Volizray/VolytraFly-Addon)",
     "cattyngmd (Shulker View is adapted from their shulker-view: https://github.com/cattyngmd/shulker-view)",
@@ -13,16 +13,16 @@
     "wuritz, Barnika18 & Awakeyv (Parkinsons is adapted from their Genyo addon: https://github.com/wuritz/genyo-addon)"
   ],
   "contact": {
-    "homepage": "https://github.com/gameeguy11/AnarchyAddon/commits/master",
-    "sources": "https://github.com/gameeguy11/AnarchyAddon",
-    "issues": "https://github.com/gameeguy11/AnarchyAddon/issues"
+    "homepage": "https://github.com/gameeguy11/6ToolsAddon-/commits/master",
+    "sources": "https://github.com/gameeguy11/6ToolsAddon-",
+    "issues": "https://github.com/gameeguy11/6ToolsAddon-/issues"
   },
   "environment": "client",
   "entrypoints": {
-    "meteor": ["gamerguy11.anarchyaddon.AnarchyAddon"]
+    "meteor": ["gamerguy11.sixtoolsaddon.SixToolsAddon"]
   },
   "mixins": [
-    "anarchyaddon.mixins.json"
+    "sixtoolsaddon.mixins.json"
   ],
   "custom": {
     "meteor-client:color": "0,182,182"

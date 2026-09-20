@@ -1,8 +1,8 @@
-# AnarchyAddon
+# 6Tools Addon
 
 A [Meteor Client](https://github.com/MeteorDevelopment/meteor-client) addon for Fabric
 **1.21.11**, built for the 6b6t anarchy server. Modules and HUD elements live under their
-own "AnarchyAddon" category and HUD group, separate from Meteor's built-in stuff.
+own "6Tools Addon" category and HUD group, separate from Meteor's built-in stuff.
 
 ## Supporting the Creator
 #### I would appreciate it if 6b6t players paid me some Murphcoin in the Legion Discord server.
@@ -171,7 +171,7 @@ whisper wording differs from 6b6t's.
 
 - Every whisper you send or receive gets appended to a local `.html` file, styled to look
   like a Discord DM thread rather than plain chat text.
-- Files live under `.minecraft/config/anarchyaddon/WhisperLogs/`, named after the other
+- Files live under `.minecraft/config/sixtoolsaddon/WhisperLogs/`, named after the other
   person in the conversation.
 - The two format settings (`receive-format`/`send-format`) tell it how to recognize a
   whisper in chat, so you can adjust them to match your server's `/msg` or `/tell` wording
@@ -219,7 +219,7 @@ instead.
 ### Sound Editor
 Plays **your own** sound files for addon events - nothing is bundled, so a sound type stays
 silent until you put a file in its folder. Folders are created automatically in
-`.minecraft/config/anarchyaddon/sounds/`:
+`.minecraft/config/sixtoolsaddon/sounds/`:
 
 | Folder | Plays when |
 |--------|------------|
@@ -299,7 +299,7 @@ A global enemies list, separate from Player Tracker's and Auto TP Accept's own
 independent `enemy-names` settings (each of those predates this and still keeps its own
 list). This one is shared by **Chat Highlighter** and **Sound Editor**'s `enemy_spotted`
 sound, managed entirely through the `.enemy` command below, and persists to
-`.minecraft/config/anarchyaddon-enemies.txt`. `.enemy add`/`.enemy remove` tab-complete
+`.minecraft/config/sixtoolsaddon-enemies.txt`. `.enemy add`/`.enemy remove` tab-complete
 (add suggests currently loaded player names, remove suggests names already on the list).
 
 ## Commands
@@ -353,7 +353,7 @@ Integrations settings in Discord and create a new one.
 ./gradlew build
 ```
 
-The output jar lands in `build/libs/`, versioned as `anarchyaddon-<major>.<minor>.<patch>.jar`
+The output jar lands in `build/libs/`, versioned as `6ToolsAddon-<major>.<minor>.<patch>.jar`
 (the version auto-increments on every build, see the top of `build.gradle.kts` if you want
 to reset or change that). Drop the built jar into your `mods` folder alongside a matching
 Meteor Client build.
