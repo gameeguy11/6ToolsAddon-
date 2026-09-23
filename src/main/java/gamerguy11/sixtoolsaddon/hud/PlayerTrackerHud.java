@@ -1,5 +1,6 @@
 package gamerguy11.sixtoolsaddon.hud;
 
+import gamerguy11.sixtoolsaddon.utils.ThemeColorUtils;
 import gamerguy11.sixtoolsaddon.SixToolsAddon;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.friends.Friends;
@@ -74,10 +75,24 @@ public class PlayerTrackerHud extends HudElement {
         .build()
     );
 
+    private final Setting<Boolean> friendColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("friend-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<SettingColor> enemyColor = sgColors.add(new ColorSetting.Builder()
         .name("enemy-color")
         .description("Color for players on the enemy-names list below.")
         .defaultValue(new SettingColor(225, 75, 75))
+        .build()
+    );
+
+    private final Setting<Boolean> enemyColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("enemy-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
         .build()
     );
 
@@ -88,10 +103,24 @@ public class PlayerTrackerHud extends HudElement {
         .build()
     );
 
+    private final Setting<Boolean> otherColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("other-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<SettingColor> distanceColor = sgColors.add(new ColorSetting.Builder()
         .name("distance-color")
         .description("Color used for the distance text.")
         .defaultValue(new SettingColor(175, 175, 175))
+        .build()
+    );
+
+    private final Setting<Boolean> distanceColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("distance-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
         .build()
     );
 
@@ -147,6 +176,13 @@ public class PlayerTrackerHud extends HudElement {
         .description("Color used for the background.")
         .defaultValue(new SettingColor(25, 25, 25, 100))
         .visible(background::get)
+        .build()
+    );
+
+    private final Setting<Boolean> backgroundColorUseTheme = sgBackground.add(new BoolSetting.Builder()
+        .name("background-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
         .build()
     );
 
@@ -206,10 +242,10 @@ public class PlayerTrackerHud extends HudElement {
         double y = this.y + border.get();
 
         if (background.get()) {
-            renderer.quad(this.x, this.y, getWidth(), getHeight(), backgroundColor.get());
+            renderer.quad(this.x, this.y, getWidth(), getHeight(), ThemeColorUtils.resolve(backgroundColor.get(), backgroundColorUseTheme.get()));
         }
 
-        renderer.text("Players:", x + border.get() + alignX(renderer.textWidth("Players:", shadow.get(), getScale()), alignment.get()), y, otherColor.get(), shadow.get(), getScale());
+        renderer.text("Players:", x + border.get() + alignX(renderer.textWidth("Players:", shadow.get(), getScale()), alignment.get()), y, ThemeColorUtils.resolve(otherColor.get(), otherColorUseTheme.get()), shadow.get(), getScale());
 
         if (mc.world == null || mc.getCameraEntity() == null) return;
         double spaceWidth = renderer.textWidth(" ", shadow.get(), getScale());
@@ -230,14 +266,14 @@ public class PlayerTrackerHud extends HudElement {
             y += renderer.textHeight(shadow.get(), getScale()) + 2;
 
             x = renderer.text(name, x, y, color, shadow.get(), getScale());
-            if (showDistance.get()) renderer.text(distanceText, x + spaceWidth, y, distanceColor.get(), shadow.get(), getScale());
+            if (showDistance.get()) renderer.text(distanceText, x + spaceWidth, y, ThemeColorUtils.resolve(distanceColor.get(), distanceColorUseTheme.get()), shadow.get(), getScale());
         }
     }
 
     private Color colorFor(AbstractClientPlayerEntity player) {
-        if (Friends.get().isFriend(player)) return friendColor.get();
-        if (isEnemy(player)) return enemyColor.get();
-        return otherColor.get();
+        if (Friends.get().isFriend(player)) return ThemeColorUtils.resolve(friendColor.get(), friendColorUseTheme.get());
+        if (isEnemy(player)) return ThemeColorUtils.resolve(enemyColor.get(), enemyColorUseTheme.get());
+        return ThemeColorUtils.resolve(otherColor.get(), otherColorUseTheme.get());
     }
 
     private boolean isEnemy(AbstractClientPlayerEntity player) {

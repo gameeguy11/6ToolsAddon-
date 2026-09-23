@@ -1,5 +1,6 @@
 package gamerguy11.sixtoolsaddon.modules.utility;
 
+import gamerguy11.sixtoolsaddon.utils.ThemeColorUtils;
 import gamerguy11.sixtoolsaddon.SixToolsAddon;
 import gamerguy11.sixtoolsaddon.systems.enemies.Enemies;
 import meteordevelopment.meteorclient.events.game.ReceiveMessageEvent;
@@ -65,6 +66,13 @@ public class ChatHighlighter extends Module {
             .build()
     );
 
+    private final Setting<Boolean> selfColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("self-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<SettingColor> friendColor = sgColors.add(new ColorSetting.Builder()
             .name("friend-color")
             .description("Color for players on your Meteor friends list.")
@@ -73,12 +81,26 @@ public class ChatHighlighter extends Module {
             .build()
     );
 
+    private final Setting<Boolean> friendColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("friend-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<SettingColor> enemyColor = sgColors.add(new ColorSetting.Builder()
             .name("enemy-color")
             .description("Color for players on your enemies list.")
             .defaultValue(new SettingColor(225, 75, 75))
             .visible(highlightEnemies::get)
             .build()
+    );
+
+    private final Setting<Boolean> enemyColorUseTheme = sgColors.add(new BoolSetting.Builder()
+        .name("enemy-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
     );
 
     private final Setting<Boolean> debug = sgGeneral.add(new BoolSetting.Builder()
@@ -183,9 +205,9 @@ public class ChatHighlighter extends Module {
     }
 
     private SettingColor colorFor(String name) {
-        if (highlightSelf.get() && isSelf(name)) return selfColor.get();
-        if (highlightFriends.get() && Friends.get().get(name) != null) return friendColor.get();
-        if (highlightEnemies.get() && Enemies.get().isEnemy(name)) return enemyColor.get();
+        if (highlightSelf.get() && isSelf(name)) return ThemeColorUtils.resolve(selfColor.get(), selfColorUseTheme.get());
+        if (highlightFriends.get() && Friends.get().get(name) != null) return ThemeColorUtils.resolve(friendColor.get(), friendColorUseTheme.get());
+        if (highlightEnemies.get() && Enemies.get().isEnemy(name)) return ThemeColorUtils.resolve(enemyColor.get(), enemyColorUseTheme.get());
         return null;
     }
 

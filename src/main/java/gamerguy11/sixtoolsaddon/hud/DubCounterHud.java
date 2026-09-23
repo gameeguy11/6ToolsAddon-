@@ -1,5 +1,6 @@
 package gamerguy11.sixtoolsaddon.hud;
 
+import gamerguy11.sixtoolsaddon.utils.ThemeColorUtils;
 import gamerguy11.sixtoolsaddon.SixToolsAddon;
 import gamerguy11.sixtoolsaddon.commands.DubCounterCommand;
 import meteordevelopment.meteorclient.settings.BoolSetting;
@@ -43,6 +44,13 @@ public class DubCounterHud extends HudElement {
         .build()
     );
 
+    private final Setting<Boolean> colorUseTheme = sgGeneral.add(new BoolSetting.Builder()
+        .name("color-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private static final SettingColor WHITE = new SettingColor(255, 255, 255);
 
     public DubCounterHud() {
@@ -75,9 +83,9 @@ public class DubCounterHud extends HudElement {
     public void render(HudRenderer renderer) {
         double drawX = x;
 
-        drawX = renderer.text(label(), drawX, y, color.get(), shadow.get(), getScale());
+        drawX = renderer.text(label(), drawX, y, ThemeColorUtils.resolve(color.get(), colorUseTheme.get()), shadow.get(), getScale());
         drawX = renderer.text(number(), drawX, y, WHITE, shadow.get(), getScale());
-        renderer.text(suffix(), drawX, y, color.get(), shadow.get(), getScale());
+        renderer.text(suffix(), drawX, y, ThemeColorUtils.resolve(color.get(), colorUseTheme.get()), shadow.get(), getScale());
     }
 
     private double getScale() {

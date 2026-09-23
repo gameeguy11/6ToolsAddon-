@@ -1,5 +1,6 @@
 package gamerguy11.sixtoolsaddon.modules.utility;
 
+import gamerguy11.sixtoolsaddon.utils.ThemeColorUtils;
 import gamerguy11.sixtoolsaddon.SixToolsAddon;
 import gamerguy11.sixtoolsaddon.shulkerview.RenderHandler;
 import gamerguy11.sixtoolsaddon.shulkerview.UpdateHandler;
@@ -53,6 +54,13 @@ public class ShulkerView extends Module {
         .build()
     );
 
+    private final Setting<Boolean> backgroundColorUseTheme = sgBackground.add(new BoolSetting.Builder()
+        .name("background-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Boolean> anchorRight = sgPosition.add(new BoolSetting.Builder()
         .name("anchor-right")
         .description("Starts drawing previews from the right edge of the screen instead of the left. With both-sides on, overflow spills to the opposite side.")
@@ -98,7 +106,7 @@ public class ShulkerView extends Module {
     }
 
     public int getBackground() {
-        return backgroundColor.get().getPacked();
+        return ThemeColorUtils.resolve(backgroundColor.get(), backgroundColorUseTheme.get()).getPacked();
     }
 
     public float getScale() {

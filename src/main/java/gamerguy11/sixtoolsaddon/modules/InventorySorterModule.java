@@ -6,18 +6,25 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import meteordevelopment.meteorclient.events.world.TickEvent;
 import meteordevelopment.meteorclient.settings.BoolSetting;
+import meteordevelopment.meteorclient.settings.EnumSetting;
 import meteordevelopment.meteorclient.settings.IntSetting;
 import meteordevelopment.meteorclient.settings.Setting;
 import meteordevelopment.meteorclient.settings.SettingGroup;
+import meteordevelopment.meteorclient.settings.StringSetting;
 import meteordevelopment.meteorclient.systems.modules.Module;
 import meteordevelopment.meteorclient.utils.player.ChatUtils;
 import meteordevelopment.meteorclient.utils.player.InvUtils;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ShulkerBoxScreenHandler;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.Identifier;
 import meteordevelopment.orbit.EventHandler;
 
@@ -31,8 +38,10 @@ import java.nio.file.Path;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class InventorySorterModule extends Module {
     private static final Path SAVE_FILE = FabricLoader.getInstance()
@@ -65,6 +74,29 @@ public class InventorySorterModule extends Module {
         .build()
     );
 
+    private final SettingGroup sgAutoLoot = settings.createGroup("Auto-Loot");
+
+    public enum AutoLootMode {
+        Off,
+        Refill,
+        Rekit
+    }
+
+    private final Setting<AutoLootMode> autoLootMode = sgAutoLoot.add(new EnumSetting.Builder<AutoLootMode>()
+        .name("auto-loot")
+        .description("Off: does nothing extra. Refill: whenever you open storage while this module is active, takes any items you're already carrying, topping up what you have. Rekit: takes items belonging to the chosen saved inventory below from any storage you open, then arranges your inventory into that layout once you close it.")
+        .defaultValue(AutoLootMode.Off)
+        .build()
+    );
+
+    private final Setting<String> rekitTarget = sgAutoLoot.add(new StringSetting.Builder()
+        .name("rekit-inventory")
+        .description("Name of the saved inventory (see the inventories list) to pull items for and arrange into, when auto-loot is set to Rekit.")
+        .defaultValue("")
+        .visible(() -> autoLootMode.get() == AutoLootMode.Rekit)
+        .build()
+    );
+
     private record SlotMove(int from, int to) {}
 
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -75,6 +107,11 @@ public class InventorySorterModule extends Module {
     private boolean isSorted = true;
     private boolean retriedThisPass = false;
     private String activeInventoryKey = null;
+
+    private final ArrayDeque<Integer> lootJobs = new ArrayDeque<>();
+    private ScreenHandler lastSeenHandler = null;
+    private boolean pendingRekitSort = false;
+    private boolean autoLootSort = false;
 
     public InventorySorterModule() {
         super(SixToolsAddon.CATEGORY, "inventory-sorter", "Auto-sorts your inventory back into a saved inventory layout.");
@@ -94,6 +131,10 @@ public class InventorySorterModule extends Module {
         isSorted = true;
         retriedThisPass = false;
 
+        lootJobs.clear();
+        lastSeenHandler = null;
+        pendingRekitSort = false;
+        autoLootSort = false;
     }
 
     public void notifyInfo(String message, Object... args) {
@@ -225,11 +266,38 @@ public class InventorySorterModule extends Module {
     @EventHandler
     private void onTick(TickEvent.Pre event) {
         if (mc.player == null) return;
-        if (!(mc.player.currentScreenHandler instanceof PlayerScreenHandler)) return;
+        ScreenHandler handler = mc.player.currentScreenHandler;
+
+        // Detect a newly opened/closed screen immediately, independent of the tick-rate throttle
+        // below - this only builds a list of slot ids (or checks a flag), it doesn't send packets.
+        if (handler != lastSeenHandler) {
+            lastSeenHandler = handler;
+
+            if (isContainerHandler(handler) && autoLootMode.get() != AutoLootMode.Off) {
+                queueAutoLoot(handler);
+            } else if (handler instanceof PlayerScreenHandler && pendingRekitSort) {
+                pendingRekitSort = false;
+                autoLootSort = true;
+                loadInventory(rekitTarget.get());
+            }
+        }
 
         ticks++;
         if (ticks < tickRate.get()) return;
         ticks = 0;
+
+        if (!lootJobs.isEmpty()) {
+            if (isContainerHandler(handler)) {
+                InvUtils.shiftClick().slotId(lootJobs.removeFirst());
+                if (lootJobs.isEmpty()) onLootDrained();
+            } else {
+                // Storage was closed mid-loot (e.g. server closed it); don't keep clicking a stale screen.
+                lootJobs.clear();
+            }
+            return;
+        }
+
+        if (!(handler instanceof PlayerScreenHandler)) return;
 
         if (!jobs.isEmpty()) {
             isSorted = false;
@@ -250,14 +318,73 @@ public class InventorySorterModule extends Module {
 
             isSorted = true;
             retriedThisPass = false;
-            autoDisableIfEnabled();
+            if (autoLootSort) autoLootSort = false;
+            else autoDisableIfEnabled();
             return;
         }
 
         isSorted = true;
         retriedThisPass = false;
         if (chatNotify.get()) info("Inventory (highlight)%s(default) sorted.", activeInventoryKey);
-        autoDisableIfEnabled();
+        if (autoLootSort) autoLootSort = false;
+        else autoDisableIfEnabled();
+    }
+
+    private boolean isContainerHandler(ScreenHandler handler) {
+        return handler instanceof GenericContainerScreenHandler || handler instanceof ShulkerBoxScreenHandler;
+    }
+
+    private void queueAutoLoot(ScreenHandler handler) {
+        lootJobs.clear();
+
+        Set<Item> wanted = autoLootMode.get() == AutoLootMode.Rekit ? rekitWantedItems() : refillWantedItems();
+        if (wanted == null || wanted.isEmpty()) return;
+
+        for (Slot slot : handler.slots) {
+            // Only look at the storage's own slots, not the player's inventory slots the same
+            // handler also exposes.
+            if (slot.inventory instanceof PlayerInventory) continue;
+
+            ItemStack stack = slot.getStack();
+            if (stack.isEmpty() || !wanted.contains(stack.getItem())) continue;
+
+            lootJobs.addLast(slot.id);
+        }
+    }
+
+    private Set<Item> refillWantedItems() {
+        Set<Item> wanted = new HashSet<>();
+
+        for (int i = 0; i < 36; i++) {
+            ItemStack stack = mc.player.getInventory().getStack(i);
+            if (!stack.isEmpty()) wanted.add(stack.getItem());
+        }
+
+        return wanted;
+    }
+
+    private Set<Item> rekitWantedItems() {
+        if (rekitTarget.get().isBlank()) {
+            error("Set a (highlight)rekit-inventory(default) name in the module settings.");
+            return null;
+        }
+
+        HashMap<Integer, Item> kit = inventories.get(rekitTarget.get());
+        if (kit == null || kit.isEmpty()) {
+            error("No saved inventory named (highlight)%s(default) to rekit from.", rekitTarget.get());
+            return null;
+        }
+
+        return new HashSet<>(kit.values());
+    }
+
+    private void onLootDrained() {
+        if (autoLootMode.get() == AutoLootMode.Rekit) {
+            pendingRekitSort = true;
+            if (chatNotify.get()) info("Grabbed items for (highlight)%s(default), arranging once you close this.", rekitTarget.get());
+        } else if (chatNotify.get()) {
+            info("Refill complete.");
+        }
     }
 
     private void autoDisableIfEnabled() {

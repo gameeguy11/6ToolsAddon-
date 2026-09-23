@@ -1,5 +1,6 @@
 package gamerguy11.sixtoolsaddon.hud;
 
+import gamerguy11.sixtoolsaddon.utils.ThemeColorUtils;
 import gamerguy11.sixtoolsaddon.SixToolsAddon;
 import meteordevelopment.meteorclient.settings.*;
 import meteordevelopment.meteorclient.systems.hud.*;
@@ -55,6 +56,13 @@ public class StatsHud extends HudElement {
         .build()
     );
 
+    private final Setting<Boolean> textColorUseTheme = sgGeneral.add(new BoolSetting.Builder()
+        .name("text-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
+        .build()
+    );
+
     private final Setting<Integer> border = sgGeneral.add(new IntSetting.Builder()
         .name("border")
         .description("Padding around the element.")
@@ -92,6 +100,13 @@ public class StatsHud extends HudElement {
         .description("Color used for the background.")
         .defaultValue(new SettingColor(25, 25, 25, 100))
         .visible(background::get)
+        .build()
+    );
+
+    private final Setting<Boolean> backgroundColorUseTheme = sgBackground.add(new BoolSetting.Builder()
+        .name("background-use-theme")
+        .description("Use the current Meteor theme accent color.")
+        .defaultValue(false)
         .build()
     );
 
@@ -700,7 +715,7 @@ public class StatsHud extends HudElement {
     @Override
     public void render(HudRenderer renderer) {
         if (background.get()) {
-            renderer.quad(x, y, getWidth(), getHeight(), backgroundColor.get());
+            renderer.quad(x, y, getWidth(), getHeight(), ThemeColorUtils.resolve(backgroundColor.get(), backgroundColorUseTheme.get()));
         }
 
         List<String> lines = getLines();
@@ -708,7 +723,7 @@ public class StatsHud extends HudElement {
 
         if (lines.isEmpty()) {
             String placeholder = "Stats";
-            renderer.text(placeholder, x + border.get() + alignX(renderer.textWidth(placeholder, shadow.get(), getScale()), alignment.get()), y, textColor.get(), shadow.get(), getScale());
+            renderer.text(placeholder, x + border.get() + alignX(renderer.textWidth(placeholder, shadow.get(), getScale()), alignment.get()), y, ThemeColorUtils.resolve(textColor.get(), textColorUseTheme.get()), shadow.get(), getScale());
             return;
         }
 
@@ -718,7 +733,7 @@ public class StatsHud extends HudElement {
             first = false;
 
             double x = this.x + border.get() + alignX(renderer.textWidth(line, shadow.get(), getScale()), alignment.get());
-            renderer.text(line, x, y, textColor.get(), shadow.get(), getScale());
+            renderer.text(line, x, y, ThemeColorUtils.resolve(textColor.get(), textColorUseTheme.get()), shadow.get(), getScale());
         }
     }
 

@@ -1,22 +1,29 @@
 package gamerguy11.sixtoolsaddon;
 
 import com.mojang.logging.LogUtils;
+import gamerguy11.sixtoolsaddon.commands.CoordsCommand;
 import gamerguy11.sixtoolsaddon.commands.DubCounterCommand;
 import gamerguy11.sixtoolsaddon.commands.EnemyCommand;
 import gamerguy11.sixtoolsaddon.commands.InventoryCommand;
 import gamerguy11.sixtoolsaddon.commands.SetDiscordCommand;
 import gamerguy11.sixtoolsaddon.gui.EnemiesTab;
+import gamerguy11.sixtoolsaddon.hud.ArmorHud;
 import gamerguy11.sixtoolsaddon.hud.DubCounterHud;
+import gamerguy11.sixtoolsaddon.hud.InventoryHud;
 import gamerguy11.sixtoolsaddon.hud.PlayerTrackerHud;
+import gamerguy11.sixtoolsaddon.hud.PvPNeccessaryHud;
 import gamerguy11.sixtoolsaddon.hud.StatsHud;
 import gamerguy11.sixtoolsaddon.sound.SoundEngine;
 import gamerguy11.sixtoolsaddon.modules.Efly;
+import gamerguy11.sixtoolsaddon.modules.esp.AdvancedESP;
 import gamerguy11.sixtoolsaddon.modules.ForeverForward;
 import gamerguy11.sixtoolsaddon.modules.Ez;
 import gamerguy11.sixtoolsaddon.modules.InventorySorterModule;
+import gamerguy11.sixtoolsaddon.modules.Suicide;
 import gamerguy11.sixtoolsaddon.modules.utility.AntiDrop;
 import gamerguy11.sixtoolsaddon.modules.utility.AutoTpAccept;
 import gamerguy11.sixtoolsaddon.modules.utility.ChatHighlighter;
+import gamerguy11.sixtoolsaddon.modules.utility.DeathLogger;
 import gamerguy11.sixtoolsaddon.modules.utility.DiscordNotifier;
 import gamerguy11.sixtoolsaddon.modules.utility.Homes;
 import gamerguy11.sixtoolsaddon.modules.utility.ShulkerView;
@@ -87,11 +94,15 @@ public class SixToolsAddon extends MeteorAddon {
         Modules.get().add(new SwingSpeed());
         Modules.get().add(new Parkinsons());
         Modules.get().add(new SoundEditor());
+        Modules.get().add(new DeathLogger());
+        Modules.get().add(new AdvancedESP());
+        Modules.get().add(new Suicide());
 
         Commands.add(new InventoryCommand());
         Commands.add(new DubCounterCommand());
         Commands.add(new SetDiscordCommand());
         Commands.add(new EnemyCommand());
+        Commands.add(new CoordsCommand());
 
         Tabs.add(new EnemiesTab());
         moveTabAfter(EnemiesTab.class, FriendsTab.class);
@@ -99,6 +110,9 @@ public class SixToolsAddon extends MeteorAddon {
         Hud.get().register(PlayerTrackerHud.INFO);
         Hud.get().register(DubCounterHud.INFO);
         Hud.get().register(StatsHud.INFO);
+        Hud.get().register(InventoryHud.INFO);
+        Hud.get().register(ArmorHud.INFO);
+        Hud.get().register(PvPNeccessaryHud.INFO);
     }
 
     @Override

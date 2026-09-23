@@ -6,12 +6,6 @@ own "6Tools Addon" category and HUD group, separate from Meteor's built-in stuff
 
 #### Showcase: https://medal.tv/games/minecraft/clips/nz5q0SlHc9e2K63a6?invite=cr-MSwxcHEsMzIxOTEyMjI1
 
-## Supporting the Creator
-#### I would appreciate it if 6b6t players paid me some Murphcoin in the Legion Discord server.
-#### .pay @gamerguy_11 any amount you feel is right
-#### Tysm for feeding my addiction
-#### The top 3 donaters will get a custom splash text
-
 ## Using this addon might give you 2 **FREE** homes
 
 ## Unblock Servers
